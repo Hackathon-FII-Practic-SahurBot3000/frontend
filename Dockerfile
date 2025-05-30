@@ -1,45 +1,65 @@
-# 🧱 Base image for dependencies and building
+# ========================
+# 🔧 Builder Stage
+# ========================
 FROM node:20-alpine AS builder
 
-# Set working directory
+# Use bash for better debugging
+SHELL ["/bin/sh", "-c"]
+
+# 1. Set working directory
 WORKDIR /app
 
-# Install dependencies only from package.json and package-lock.json
-COPY package*.json ./
+# 2. Install PNPM
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
-# Install deps with a clean cache
-RUN npm ci
+# 3. Copy lockfiles & package metadata first (for better caching)
+COPY pnpm-lock.yaml ./
+COPY package.json ./
+COPY tsconfig.json ./
+COPY next.config.js ./
+COPY .npmrc ./
 
-# Copy all other source code
+# 4. Install dependencies (using cached layers)
+RUN pnpm install --frozen-lockfile
+
+# 5. Copy the rest of the app source
 COPY . .
 
-# Build Next.js app (outputs to .next/)
-RUN npm run build
+# 6. Build the Next.js app
+RUN pnpm build
 
-# Copy only needed files to production image
+---
+
+# ========================
+# 🏃 Runtime Stage
+# ========================
 FROM node:20-alpine AS runner
 
-# Set working directory
+# Enable PNPM
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
+# Set environment to production
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# 1. Set working directory
 WORKDIR /app
 
-# Install only production dependencies
-COPY --from=builder /app/package.json ./
-COPY --from=builder /app/package-lock.json ./
-RUN npm ci --omit=dev
-
-# Copy built app and public/static assets
-COPY --from=builder /app/.next ./.next
+# 2. Copy only production files from builder
 COPY --from=builder /app/public ./public
-COPY --from=builder /app/next.config.js ./next.config.js
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/package.json ./
 COPY --from=builder /app/tsconfig.json ./tsconfig.json
+COPY --from=builder /app/next.config.js ./next.config.js
 COPY --from=builder /app/.env ./.env
+COPY --from=builder /app/.npmrc .npmrc
 
-# Tell Next to serve the app
-ENV NODE_ENV production
-ENV PORT 3000
+# 3. Install only production dependencies
+COPY --from=builder /app/pnpm-lock.yaml ./pnpm-lock.yaml
+RUN pnpm install --frozen-lockfile --prod
 
-# Expose the port
+# 4. Expose app port
 EXPOSE 3000
 
-# Default command to run the app
-CMD ["npx", "next", "start"]
+# 5. Start app
+CMD ["pnpm", "start"]
