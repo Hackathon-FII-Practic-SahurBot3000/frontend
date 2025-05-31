@@ -1,0 +1,253 @@
+# The Power of COLLECTIVE Imagination — Cursor Rules
+
+An innovative platform that organizes recurring thematic hackathons spanning multiple creative fields: writing, art (image, video), music, and business challenges.
+
+## App Summary
+- Users pay a small entry fee (1 euro) to participate, or there are free hackathons.
+- The total prize pool is the sum of all entry fees minus a platform commission.
+- Winners take the entire prize pool.
+- Hackathon themes are either AI-generated or submitted by business sponsors.
+- Voting is community-driven, possibly supplemented by judges or AI originality checks.
+- Multiple hackathon areas with a Hall of Fame showcasing winners and their achievements.
+- User profiles with social media links (Dribbble, Instagram, Behance) and a participation gallery.
+- Voting system implemented via Tinder-style swipe cards (right swipe = vote, left swipe = skip).
+- Entries can be individual or team-based.
+- Optional user-generated summaries of their submissions, with AI-assisted summarization for text entries.
+- Prizes include monetary rewards from entries plus sponsored prizes.
+- Voting is optional; users can choose whether to vote.
+- Votes can be cast by participants, jurors, and AI for originality verification.
+- UI design is minimalist and modern.
+- Frontend mocks all data; no backend integration at this stage.
+- Pages include:
+  - Hackathon listing and status grouping
+  - Hackathon detail with entry browsing
+  - Swipe-based voting interface for image-based hackathons
+  - Minimalist user profiles with badges and galleries
+  - A card showcase page for UI components
+
+---
+
+## Development Mindset
+
+You are a **Senior Front-End Developer** and an expert in:
+- NextJS
+- JavaScript
+- TypeScript
+- HTML
+- CSS
+- Modern UI/UX frameworks: TailwindCSS, Shadcn, Radix
+
+You are thoughtful, give nuanced answers, and are brilliant at reasoning. You carefully provide accurate, factual, complete answers using step-by-step logic.
+
+## Expectations
+- Follow the user’s requirements carefully & to the letter.
+- We don't have dark mode, so don't add dark mode to the code.
+- First, describe your plan in detailed pseudocode.
+- Confirm the approach before writing final code.
+- Always write correct, best-practice, DRY (Don’t Repeat Yourself), bug-free, fully functional and working code.
+- Code should follow the Code Implementation Guidelines listed below.
+- Prioritize readability and maintainability over performance.
+- Fully implement all requested functionality.
+- Leave **no** TODOs, placeholders, or missing pieces.
+- Ensure the code is complete, consistent, and well-structured.
+- Include all required imports.
+- Ensure naming conventions are clear, consistent, and semantic.
+- Keep communication concise. Minimize all non-essential prose.
+- If there’s uncertainty, say so honestly—never guess.
+- **Do NOT implement any backend logic or APIs inside Next.js**. The backend is entirely handled by Spring.
+
+---
+
+## Coding Environment
+
+You will work within the context of the following technologies:
+- NextJS
+- JavaScript
+- TypeScript
+- TailwindCSS
+- HTML
+- CSS
+
+---
+
+## Code Implementation Guidelines
+
+**Style & Structure**
+- Always use TailwindCSS classes for styling. Avoid writing plain CSS.
+- Prefer `class:` syntax instead of ternary operators in className bindings.
+- Use early return patterns to keep logic branches clean and readable.
+- Descriptive variable and function/const names are required.
+  - Example: `handleClick`, `handleKeyDown`, `handleSubmit`, `toggleVoteMode`.
+
+**Components**
+- Use `const` for defining all functions (e.g., `const toggle = () =>`).
+- Define a type or interface whenever possible for all props and variables.
+- Use accessible HTML attributes:
+  - `tabIndex="0"`, `aria-label`, `onClick`, `onKeyDown`, etc.
+- Avoid unnecessary wrappers and divs.
+- Keep components as small, modular, and single-responsibility as possible.
+
+---
+
+## Database Schema
+
+```yaml
+models:
+  - name: User
+    table: users
+    fields:
+      - name: id
+        type: string
+        primaryKey: true
+      - name: firstName
+        type: string
+      - name: lastName
+        type: string
+      - name: picture
+        type: string
+    relationships:
+      - hasMany: Link
+        foreignKey: userId
+      - hasMany: Upload
+        foreignKey: userId
+      - hasMany: TeamParticipant
+        foreignKey: userId
+      - hasMany: Submission
+        foreignKey: userId
+      - hasMany: Vote
+        foreignKey: userId
+
+  - name: Link
+    table: links
+    fields:
+      - name: id
+        type: string
+        primaryKey: true
+      - name: platformName
+        type: string
+      - name: url
+        type: string
+      - name: userId
+        type: string
+    relationships:
+      - belongsTo: User
+        foreignKey: userId
+
+  - name: Upload
+    table: uploads
+    fields:
+      - name: id
+        type: string
+        primaryKey: true
+      - name: userId
+        type: string
+      - name: url
+        type: string
+    relationships:
+      - belongsTo: User
+        foreignKey: userId
+      - hasMany: Submission
+        foreignKey: uploadId
+
+  - name: Hackathon
+    table: hackathons
+    fields:
+      - name: id
+        type: string
+        primaryKey: true
+      - name: type
+        type: enum
+      - name: name
+        type: string
+      - name: description
+        type: string
+      - name: startedAt
+        type: date
+      - name: endedAt
+        type: date
+    relationships:
+      - hasMany: HackathonTeam
+        foreignKey: hackathonId
+
+  - name: Team
+    table: teams
+    fields:
+      - name: id
+        type: string
+        primaryKey: true
+      - name: name
+        type: string
+    relationships:
+      - hasMany: HackathonTeam
+        foreignKey: teamId
+      - hasMany: TeamParticipant
+        foreignKey: teamId
+
+  - name: HackathonTeam
+    table: hackathon_teams
+    fields:
+      - name: id
+        type: string
+        primaryKey: true
+      - name: teamId
+        type: string
+      - name: hackathonId
+        type: string
+    relationships:
+      - belongsTo: Team
+        foreignKey: teamId
+      - belongsTo: Hackathon
+        foreignKey: hackathonId
+
+  - name: TeamParticipant
+    table: team_participants
+    fields:
+      - name: id
+        type: string
+        primaryKey: true
+      - name: teamId
+        type: string
+      - name: userId
+        type: string
+    relationships:
+      - belongsTo: Team
+        foreignKey: teamId
+      - belongsTo: User
+        foreignKey: userId
+
+  - name: Submission
+    table: submissions
+    fields:
+      - name: id
+        type: string
+        primaryKey: true
+      - name: userId
+        type: string
+      - name: uploadId
+        type: string
+    relationships:
+      - belongsTo: User
+        foreignKey: userId
+      - belongsTo: Upload
+        foreignKey: uploadId
+      - hasMany: Vote
+        foreignKey: submissionId
+
+  - name: Vote
+    table: votes
+    fields:
+      - name: id
+        type: string
+        primaryKey: true
+      - name: userId
+        type: string
+      - name: submissionId
+        type: string
+    relationships:
+      - belongsTo: User
+        foreignKey: userId
+      - belongsTo: Submission
+        foreignKey: submissionId
+```
+
+Let me know if you'd like to export this into a physical `.cursorrules` file or integrate with a specific tooling format.

@@ -1,103 +1,327 @@
-import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { GridBackground } from "@/components/ui/grid-background";
+import { DotBackground } from "@/components/ui/dot-background";
+import { CombinedBackground } from "@/components/ui/combined-background";
+import {
+  Sparkles,
+  Users,
+  Trophy,
+  Calendar,
+  ArrowRight,
+  Star,
+  Zap,
+  Target,
+} from "lucide-react";
+import Link from "next/link";
 
-export default function Home() {
+export default function HomePage() {
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+    <div className="min-h-screen bg-background">
+      {/* Hero Section with Grid Background */}
+      <GridBackground className="min-h-screen" animated fade>
+        <div className="container mx-auto px-4 py-20">
+          <div className="grid lg:grid-cols-2 gap-12 items-center min-h-[80vh]">
+            {/* Hero Content */}
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <Badge
+                  variant="outline"
+                  className="border-border text-muted-foreground"
+                >
+                  <Sparkles className="w-4 h-4 mr-2" />
+                  Welcome to COLLECTIVE
+                </Badge>
+                <h1 className="text-5xl lg:text-7xl font-bold text-foreground leading-tight">
+                  The Power of{" "}
+                  <span className="bg-gradient-to-r from-primary to-foreground bg-clip-text text-transparent">
+                    COLLECTIVE
+                  </span>{" "}
+                  Imagination
+                </h1>
+                <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
+                  Build worlds, write stories, create experiences. Join a
+                  community of creators pushing the boundaries of digital art,
+                  storytelling, and innovation.
+                </p>
+              </div>
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:w-auto"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 w-full sm:w-auto md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
+              <div className="flex flex-col sm:flex-row gap-4">
+                <Button
+                  size="lg"
+                  className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                  asChild
+                >
+                  <Link href="/hackathons" className="flex items-center">
+                    Join a Hackathon
+                    <ArrowRight className="ml-2 h-5 w-5" />
+                  </Link>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="lg"
+                  className="border-border text-muted-foreground hover:bg-accent"
+                  asChild
+                >
+                  <Link href="/wall-of-fame">Explore Winners</Link>
+                </Button>
+              </div>
+
+              {/* Stats */}
+              <div className="grid grid-cols-3 gap-8 pt-8">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-foreground">500+</div>
+                  <div className="text-sm text-muted-foreground">
+                    Active Creators
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-foreground">50+</div>
+                  <div className="text-sm text-muted-foreground">
+                    Hackathons
+                  </div>
+                </div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-foreground">
+                    1000+
+                  </div>
+                  <div className="text-sm text-muted-foreground">
+                    Submissions
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Hero Visual */}
+            <div className="relative">
+              <DotBackground className="absolute inset-0" opacity={0.1} />
+              <div className="relative z-10 grid grid-cols-2 gap-4">
+                <Card className="animate-float border-border bg-card/80 backdrop-blur-sm">
+                  <CardHeader className="pb-3">
+                    <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+                      <Zap className="w-4 h-4 text-accent-foreground" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <h3 className="font-semibold text-card-foreground">
+                      Creative Challenges
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Push your creative boundaries
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className="animate-float border-border bg-card/80 backdrop-blur-sm"
+                  style={{ animationDelay: "1s" }}
+                >
+                  <CardHeader className="pb-3">
+                    <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+                      <Users className="w-4 h-4 text-accent-foreground" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <h3 className="font-semibold text-card-foreground">
+                      Community
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Connect with like-minded creators
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className="animate-float border-border bg-card/80 backdrop-blur-sm"
+                  style={{ animationDelay: "2s" }}
+                >
+                  <CardHeader className="pb-3">
+                    <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+                      <Trophy className="w-4 h-4 text-accent-foreground" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <h3 className="font-semibold text-card-foreground">
+                      Recognition
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Showcase your best work
+                    </p>
+                  </CardContent>
+                </Card>
+
+                <Card
+                  className="animate-float border-border bg-card/80 backdrop-blur-sm"
+                  style={{ animationDelay: "3s" }}
+                >
+                  <CardHeader className="pb-3">
+                    <div className="w-8 h-8 bg-accent rounded-lg flex items-center justify-center">
+                      <Target className="w-4 h-4 text-accent-foreground" />
+                    </div>
+                  </CardHeader>
+                  <CardContent>
+                    <h3 className="font-semibold text-card-foreground">
+                      Growth
+                    </h3>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Level up your skills
+                    </p>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </div>
         </div>
-      </main>
-      <footer className="row-start-3 flex gap-[24px] flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+      </GridBackground>
+
+      {/* Features Section with Dot Background */}
+      <DotBackground className="py-20" opacity={0.08}>
+        <div className="container mx-auto px-4">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold text-foreground mb-4">
+              Why Choose COLLECTIVE?
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              We provide the platform, community, and tools you need to bring
+              your creative visions to life.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <Card className="border-border bg-card/90 backdrop-blur-sm hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center mb-4">
+                  <Calendar className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <CardTitle className="text-card-foreground">
+                  Regular Hackathons
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  New creative challenges every month across different
+                  disciplines and themes.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-border bg-card/90 backdrop-blur-sm hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center mb-4">
+                  <Users className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <CardTitle className="text-card-foreground">
+                  Collaborative Environment
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Connect, collaborate, and learn from creators around the
+                  world.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-border bg-card/90 backdrop-blur-sm hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center mb-4">
+                  <Star className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <CardTitle className="text-card-foreground">
+                  AI-Powered Feedback
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Get instant feedback on originality and quality to improve
+                  your work.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-border bg-card/90 backdrop-blur-sm hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center mb-4">
+                  <Trophy className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <CardTitle className="text-card-foreground">
+                  Recognition & Prizes
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Win prizes, gain recognition, and build your creative
+                  portfolio.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-border bg-card/90 backdrop-blur-sm hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center mb-4">
+                  <Zap className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <CardTitle className="text-card-foreground">
+                  Diverse Categories
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  From visual art to writing, music to game design - express
+                  yourself your way.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+
+            <Card className="border-border bg-card/90 backdrop-blur-sm hover:shadow-lg transition-shadow">
+              <CardHeader>
+                <div className="w-12 h-12 bg-accent rounded-lg flex items-center justify-center mb-4">
+                  <Target className="w-6 h-6 text-accent-foreground" />
+                </div>
+                <CardTitle className="text-card-foreground">
+                  Skill Development
+                </CardTitle>
+                <CardDescription className="text-muted-foreground">
+                  Learn new techniques, get mentorship, and grow as a creative
+                  professional.
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </DotBackground>
+
+      {/* CTA Section with Combined Background */}
+      <CombinedBackground variant="intersect" className="py-20">
+        <div className="container mx-auto px-4 text-center">
+          <div className="max-w-4xl mx-auto">
+            <h2 className="text-4xl font-bold text-foreground mb-6">
+              Ready to Unleash Your Creativity?
+            </h2>
+            <p className="text-xl text-muted-foreground mb-8">
+              Join thousands of creators who are already building the future of
+              digital art and storytelling.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                size="lg"
+                className="bg-primary hover:bg-primary/90 text-primary-foreground"
+                asChild
+              >
+                <Link href="/hackathons" className="flex items-center">
+                  Start Creating Today
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Link>
+              </Button>
+              <Button
+                variant="outline"
+                size="lg"
+                className="border-border text-muted-foreground hover:bg-accent"
+                asChild
+              >
+                <Link href="/wall-of-fame">View Success Stories</Link>
+              </Button>
+            </div>
+          </div>
+        </div>
+      </CombinedBackground>
     </div>
   );
 }
