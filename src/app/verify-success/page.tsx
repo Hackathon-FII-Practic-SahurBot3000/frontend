@@ -84,14 +84,13 @@ export default function VerifySuccessPage() {
             <div className="inline-flex items-center justify-center w-20 h-20 bg-green-100 rounded-full mb-6">
               <CheckCircle className="w-10 h-10 text-green-600" />
             </div>
-            <h1 className="text-4xl font-bold text-foreground mb-4">
-              Welcome to COLLECTIVE!
+            <h1 className="text-3xl font-bold text-foreground mb-4">
+              Welcome to IdeaSweep!
             </h1>
-            <p className="text-xl text-muted-foreground mb-2">
-              Your email has been successfully verified
-            </p>
-            <p className="text-muted-foreground">
-              You&apos;re now ready to join the creative community
+            <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+              Your email has been verified successfully. You&apos;re now ready
+              to explore hackathons, submit your creative work, and connect with
+              fellow creators.
             </p>
           </div>
 
@@ -105,7 +104,7 @@ export default function VerifySuccessPage() {
                   What&apos;s Next?
                 </CardTitle>
                 <CardDescription>
-                  Start your creative journey with COLLECTIVE
+                  Start your creative journey with IdeaSweep
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">

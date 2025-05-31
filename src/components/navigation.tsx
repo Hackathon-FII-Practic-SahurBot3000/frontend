@@ -28,12 +28,14 @@ import {
   Sun,
   HelpCircle,
   Shield,
+  Plus,
 } from "lucide-react";
 
 const routes = [
   { name: "Home", path: "/" },
   { name: "Hackathons", path: "/hackathons" },
   { name: "Categories", path: "/categories" },
+  { name: "Create Hackathon", path: "/create-hackathon" },
   { name: "My Hackathons", path: "/my-hackathons" },
   { name: "Wall of Fame", path: "/wall-of-fame" },
   { name: "Submit", path: "/submit" },
@@ -61,12 +63,18 @@ export default function Navigation() {
     show: boolean;
   }>({ x: 0, y: 0, show: false });
   const [isDarkMode, setIsDarkMode] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const contextMenuRef = useRef<HTMLDivElement>(null);
   const pathname = usePathname();
 
   // Mock authentication state - replace with real auth context
   const [isAuthenticated, setIsAuthenticated] = useState(true); // Set to true to show profile
   const user = isAuthenticated ? mockUser : null;
+
+  // Handle mounting to prevent hydration issues
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   // Close context menu when clicking outside
   useEffect(() => {
@@ -173,23 +181,31 @@ export default function Navigation() {
       <header className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur">
         <div className="container flex h-16 items-center justify-between">
           <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center gap-2">
-              <span className="text-xl font-bold text-foreground">
-                COLLECTIVE
+            <Link href="/" className="flex items-center space-x-2">
+              <div className="w-8 h-8 bg-gradient-to-br from-hackathon-primary to-hackathon-secondary rounded-lg flex items-center justify-center">
+                <span className="text-white font-bold text-sm">I</span>
+              </div>
+              <span className="font-bold text-xl text-hackathon-primary">
+                IdeaSweep
               </span>
             </Link>
             <nav className="hidden lg:flex items-center gap-6">
-              {routes.slice(0, 6).map((route) => (
+              {routes.slice(0, 5).map((route) => (
                 <Link
                   key={route.path}
                   href={route.path}
                   className={cn(
                     "text-sm font-medium transition-colors hover:text-foreground",
-                    pathname === route.path
+                    route.name === "Create Hackathon"
+                      ? "bg-charcoal-900 text-ivory px-3 py-1.5 rounded-md hover:bg-charcoal-800"
+                      : pathname === route.path
                       ? "text-foreground"
                       : "text-muted-foreground"
                   )}
                 >
+                  {route.name === "Create Hackathon" && (
+                    <Plus className="h-4 w-4 mr-1 inline" />
+                  )}
                   {route.name}
                 </Link>
               ))}
@@ -197,7 +213,7 @@ export default function Navigation() {
           </div>
 
           <div className="flex items-center gap-4">
-            {isAuthenticated && user ? (
+            {mounted && isAuthenticated && user ? (
               <>
                 {/* Notifications Bell */}
                 <div className="hidden lg:flex">
@@ -280,14 +296,16 @@ export default function Navigation() {
             ) : (
               <>
                 {/* Desktop Login/Register Buttons */}
-                <div className="hidden lg:flex items-center gap-2">
-                  <Button variant="ghost" size="sm" asChild>
-                    <Link href="/login">Sign in</Link>
-                  </Button>
-                  <Button size="sm" asChild>
-                    <Link href="/register">Sign up</Link>
-                  </Button>
-                </div>
+                {mounted && (
+                  <div className="hidden lg:flex items-center gap-2">
+                    <Button variant="ghost" size="sm" asChild>
+                      <Link href="/login">Sign in</Link>
+                    </Button>
+                    <Button size="sm" asChild>
+                      <Link href="/register">Sign up</Link>
+                    </Button>
+                  </div>
+                )}
               </>
             )}
 
@@ -324,90 +342,92 @@ export default function Navigation() {
               ))}
 
               {/* Mobile Auth Section */}
-              <div className="border-t pt-4 mt-4">
-                {isAuthenticated && user ? (
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-3 p-2">
-                      <div className="relative">
-                        <Avatar className="h-8 w-8">
-                          <AvatarImage
-                            src={user.avatar}
-                            alt={`${user.firstName} ${user.lastName}`}
+              {mounted && (
+                <div className="border-t pt-4 mt-4">
+                  {isAuthenticated && user ? (
+                    <div className="space-y-2">
+                      <div className="flex items-center gap-3 p-2">
+                        <div className="relative">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage
+                              src={user.avatar}
+                              alt={`${user.firstName} ${user.lastName}`}
+                            />
+                            <AvatarFallback>
+                              {user.firstName[0]}
+                              {user.lastName[0]}
+                            </AvatarFallback>
+                          </Avatar>
+                          <div
+                            className={cn(
+                              "absolute bottom-0 right-0 h-2 w-2 rounded-full border border-background",
+                              getStatusColor(user.status)
+                            )}
                           />
-                          <AvatarFallback>
-                            {user.firstName[0]}
-                            {user.lastName[0]}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div
-                          className={cn(
-                            "absolute bottom-0 right-0 h-2 w-2 rounded-full border border-background",
-                            getStatusColor(user.status)
-                          )}
-                        />
-                      </div>
-                      <div>
-                        <p className="text-sm font-medium">
-                          {user.firstName} {user.lastName}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {user.email}
-                        </p>
-                      </div>
-                      {user.notifications > 0 && (
-                        <div className="ml-auto">
-                          <span className="h-5 w-5 rounded-full bg-red-500 text-xs text-white flex items-center justify-center">
-                            {user.notifications}
-                          </span>
                         </div>
-                      )}
+                        <div>
+                          <p className="text-sm font-medium">
+                            {user.firstName} {user.lastName}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {user.email}
+                          </p>
+                        </div>
+                        {user.notifications > 0 && (
+                          <div className="ml-auto">
+                            <span className="h-5 w-5 rounded-full bg-red-500 text-xs text-white flex items-center justify-center">
+                              {user.notifications}
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                      <Link
+                        href="/profile"
+                        className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <UserCircle className="h-4 w-4" />
+                        Profile
+                      </Link>
+                      <Link
+                        href="/settings"
+                        className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Settings className="h-4 w-4" />
+                        Settings
+                      </Link>
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setMobileMenuOpen(false);
+                        }}
+                        className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground w-full text-left"
+                      >
+                        <LogOut className="h-4 w-4" />
+                        Log out
+                      </button>
                     </div>
-                    <Link
-                      href="/profile"
-                      className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <UserCircle className="h-4 w-4" />
-                      Profile
-                    </Link>
-                    <Link
-                      href="/settings"
-                      className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      <Settings className="h-4 w-4" />
-                      Settings
-                    </Link>
-                    <button
-                      onClick={() => {
-                        handleLogout();
-                        setMobileMenuOpen(false);
-                      }}
-                      className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground w-full text-left"
-                    >
-                      <LogOut className="h-4 w-4" />
-                      Log out
-                    </button>
-                  </div>
-                ) : (
-                  <div className="space-y-2">
-                    <Link
-                      href="/login"
-                      className="text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground block"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Sign in
-                    </Link>
-                    <Link
-                      href="/register"
-                      className="text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground block"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      Sign up
-                    </Link>
-                  </div>
-                )}
-              </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <Link
+                        href="/login"
+                        className="text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground block"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign in
+                      </Link>
+                      <Link
+                        href="/register"
+                        className="text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground block"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        Sign up
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              )}
             </nav>
           </div>
         )}

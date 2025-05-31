@@ -11,14 +11,13 @@ import { GridBackground } from "@/components/ui/grid-background";
 import { DotBackground } from "@/components/ui/dot-background";
 import { CombinedBackground } from "@/components/ui/combined-background";
 import {
-  Sparkles,
-  Users,
-  Trophy,
-  Calendar,
   ArrowRight,
-  Star,
+  Trophy,
+  Users,
+  Calendar,
   Zap,
   Target,
+  Star,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -32,24 +31,20 @@ export default function HomePage() {
             {/* Hero Content */}
             <div className="space-y-8">
               <div className="space-y-4">
-                <Badge
-                  variant="outline"
-                  className="border-border text-muted-foreground"
-                >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  Welcome to COLLECTIVE
+                <Badge variant="charcoal" className="mb-6">
+                  Welcome to IdeaSweep
                 </Badge>
-                <h1 className="text-5xl lg:text-7xl font-bold text-foreground leading-tight">
-                  The Power of{" "}
-                  <span className="bg-gradient-to-r from-primary to-foreground bg-clip-text text-transparent">
-                    COLLECTIVE
-                  </span>{" "}
-                  Imagination
+                <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold text-charcoal-900 mb-6 leading-tight">
+                  Where Creativity Meets{" "}
+                  <span className="bg-gradient-to-r from-hackathon-primary to-hackathon-secondary bg-clip-text text-transparent">
+                    Innovation
+                  </span>
                 </h1>
-                <p className="text-xl text-muted-foreground leading-relaxed max-w-2xl">
-                  Build worlds, write stories, create experiences. Join a
-                  community of creators pushing the boundaries of digital art,
-                  storytelling, and innovation.
+                <p className="text-lg md:text-xl text-charcoal-600 mb-8 max-w-3xl mx-auto leading-relaxed">
+                  Join themed hackathons across art, writing, music, and
+                  business. Collaborate with creators worldwide, showcase your
+                  talent, and win amazing prizes in our vibrant creative
+                  community.
                 </p>
               </div>
 
@@ -185,8 +180,8 @@ export default function HomePage() {
       <DotBackground className="py-20" opacity={0.08}>
         <div className="container mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-foreground mb-4">
-              Why Choose COLLECTIVE?
+            <h2 className="text-3xl md:text-4xl font-bold text-charcoal-900 mb-4">
+              Why Choose IdeaSweep?
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
               We provide the platform, community, and tools you need to bring
