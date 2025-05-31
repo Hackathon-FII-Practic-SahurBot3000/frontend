@@ -11,6 +11,8 @@ export interface UserDto {
   email: string;
   /** @minLength 1 */
   firstName: string;
+  /** @minLength 1 */
+  lastName: string;
   profilePictureUrl?: string;
   /** @minLength 1 */
   role: UserDtoRole;
