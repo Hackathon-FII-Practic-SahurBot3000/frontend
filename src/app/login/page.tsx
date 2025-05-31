@@ -66,10 +66,9 @@ export default function LoginPage() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-primary rounded-2xl mb-4">
               <Sparkles className="w-8 h-8 text-primary-foreground" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
-            <p className="text-muted-foreground mt-2">
-              Sign in to your COLLECTIVE account
-            </p>
+            <h1 className="text-2xl font-bold text-center text-foreground">
+              Sign in to your IdeaSweep account
+            </h1>
           </div>
 
           {/* Success Messages */}

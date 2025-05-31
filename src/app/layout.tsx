@@ -4,12 +4,15 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Navigation from "@/components/navigation";
+import { Footer } from "@/components/footer";
+import { AuthProvider } from "@/contexts/auth-context";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "The Power of COLLECTIVE Imagination",
-  description: "Build worlds, write stories, create experiences",
+  title: "IdeaSweep - Where Creativity Meets Innovation",
+  description:
+    "Join themed hackathons across art, writing, music, and business. Collaborate with creators worldwide and win amazing prizes.",
   generator: "v0.dev",
 };
 
@@ -27,10 +30,11 @@ export default function RootLayout({
           enableSystem={false}
           disableTransitionOnChange
         >
-          <div className="min-h-screen bg-background">
+          <AuthProvider>
             <Navigation />
             <main>{children}</main>
-          </div>
+            <Footer />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
