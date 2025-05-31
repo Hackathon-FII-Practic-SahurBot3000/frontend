@@ -7,4 +7,6 @@
 
 export * from './authRequest';
 export * from './authResponse';
+export * from './getCurrentUser200';
 export * from './googleAuthRequest';
+export * from './googleLoginResponse';

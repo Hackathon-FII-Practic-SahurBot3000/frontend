@@ -1,9 +1,9 @@
 "use client";
 
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -27,6 +27,8 @@ import {
   Sparkles,
   CheckCircle,
 } from "lucide-react";
+import { useGoogleLogin } from "@/generated-api/auth-controller/auth-controller";
+import axios from "axios";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -53,6 +55,22 @@ export default function LoginPage() {
       router.push("/");
     }, 2000);
   };
+
+  const googleLoginUrlQuery = useGoogleLogin();
+  const googleLoginUrl = `${process.env.NEXT_PUBLIC_API_URL}${googleLoginUrlQuery.data?.data.authUrl}`;
+
+  const googleOnClick = () => {
+    window.location.href = googleLoginUrl;
+  };
+
+  useEffect(() => {
+    const token = searchParams.get("token");
+    if (token) {
+      localStorage.setItem("token", token);
+      axios.defaults.headers.common.authorization = `Bearer ${token}`;
+      router.push("/hackathons");
+    }
+  }, [searchParams]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -217,7 +235,11 @@ export default function LoginPage() {
 
                 {/* Social Login Buttons */}
                 <div className="grid grid-cols-2 gap-3">
-                  <Button variant="outline" type="button">
+                  <Button
+                    variant="outline"
+                    type="button"
+                    onClick={googleOnClick}
+                  >
                     <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
                       <path
                         fill="currentColor"
