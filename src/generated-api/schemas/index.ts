@@ -7,6 +7,14 @@
 
 export * from './authRequest';
 export * from './authResponse';
+export * from './authResponseRole';
+export * from './findMe200';
 export * from './getCurrentUser200';
+export * from './getUserMe200';
 export * from './googleAuthRequest';
 export * from './googleLoginResponse';
+export * from './linkRequest';
+export * from './linkResponse';
+export * from './linkUpdateRequest';
+export * from './userDto';
+export * from './userDtoRole';

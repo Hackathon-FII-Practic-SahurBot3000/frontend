@@ -1,30 +1,31 @@
 "use client";
 
-import { useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
-import { GridBackground } from "@/components/ui/grid-background";
-import { DotBackground } from "@/components/ui/dot-background";
-import { SubmissionCard } from "@/components/cards/submission-card";
 import { HackathonCard } from "@/components/cards/hackathon-card";
-import {
-  Edit,
-  Settings,
-  Trophy,
-  Star,
-  Zap,
-  Flame,
-  Calendar,
-  Instagram,
-  Dribbble,
-  Globe,
-  ExternalLink,
-} from "lucide-react";
+import { SubmissionCard } from "@/components/cards/submission-card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { DotBackground } from "@/components/ui/dot-background";
+import { GridBackground } from "@/components/ui/grid-background";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { useGetUserMe } from "@/generated-api/user-controller/user-controller";
 import { currentUser, hackathons } from "@/lib/mock-data";
+import {
+  Calendar,
+  Dribbble,
+  Edit,
+  ExternalLink,
+  Flame,
+  Globe,
+  Instagram,
+  Settings,
+  Star,
+  Trophy,
+  Zap,
+} from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
 
 // Define badge types with their icons and colors
 const badges = [
@@ -66,6 +67,15 @@ const userParticipatedHackathons = hackathons.filter((h) =>
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("gallery");
 
+  const getUserMeQuery = useGetUserMe();
+  const currentUserApi = getUserMeQuery.data?.data;
+
+  console.log(currentUserApi);
+
+  if (!currentUserApi) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="min-h-screen bg-ivory">
       {/* Profile Header */}
@@ -76,18 +86,18 @@ export default function ProfilePage() {
             <div className="flex flex-col items-center">
               <Avatar className="h-32 w-32 border-4 border-white shadow-lg">
                 <AvatarImage
-                  src={currentUser.avatar || "/placeholder.svg"}
-                  alt={currentUser.name}
+                  src={currentUserApi.profilePictureUrl}
+                  alt={currentUserApi.firstName}
                 />
                 <AvatarFallback className="bg-charcoal-100 text-charcoal-700 text-4xl">
-                  {currentUser.name.charAt(0)}
+                  {currentUserApi.firstName.charAt(0)}
                 </AvatarFallback>
               </Avatar>
               <div className="mt-4 text-center">
                 <h1 className="text-3xl font-bold text-charcoal-900">
-                  {currentUser.name}
+                  {currentUserApi.firstName} {currentUserApi.lastName}
                 </h1>
-                <p className="text-charcoal-600">@{currentUser.username}</p>
+                <p className="text-charcoal-600">{currentUserApi.email}</p>
               </div>
               <div className="flex gap-3 mt-4">
                 <Button

@@ -258,10 +258,12 @@ export default function Navigation() {
                         </div>
                       </DropdownMenuLabel>
                       <DropdownMenuSeparator />
-                      <DropdownMenuItem onClick={handleProfile}>
-                        <UserCircle className="mr-2 h-4 w-4" />
-                        <span>Profile</span>
-                      </DropdownMenuItem>
+                      <Link href="/profile">
+                        <DropdownMenuItem>
+                          <UserCircle className="mr-2 h-4 w-4" />
+                          <span>Profile</span>
+                        </DropdownMenuItem>
+                      </Link>
                       <DropdownMenuItem onClick={handleSettings}>
                         <Settings className="mr-2 h-4 w-4" />
                         <span>Settings</span>

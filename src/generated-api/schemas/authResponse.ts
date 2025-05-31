@@ -4,7 +4,9 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
+import type { AuthResponseRole } from './authResponseRole';
 
 export interface AuthResponse {
   token?: string;
+  role?: AuthResponseRole;
 }
