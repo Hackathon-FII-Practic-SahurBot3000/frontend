@@ -260,10 +260,14 @@ export const formatCurrency = (
   amount: number,
   currency: string = "EUR"
 ): string => {
-  return new Intl.NumberFormat("en-EU", {
-    style: "currency",
-    currency: currency.toUpperCase(),
-  }).format(amount);
+  // Custom formatter to avoid hydration issues with Intl.NumberFormat
+  const formattedAmount = amount.toFixed(2);
+  const parts = formattedAmount.split(".");
+  const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  const decimalPart = parts[1];
+
+  const currencySymbol = currency.toUpperCase() === "EUR" ? "€" : "$";
+  return `${currencySymbol}${integerPart}.${decimalPart}`;
 };
 
 // Helper function to get card brand icon

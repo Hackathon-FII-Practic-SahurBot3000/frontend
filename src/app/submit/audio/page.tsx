@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { hackathons } from "@/lib/mock-data";
+import { formatNumber } from "@/lib/utils";
 
 export default function AudioSubmissionPage() {
   const searchParams = useSearchParams();
@@ -254,7 +255,10 @@ export default function AudioSubmissionPage() {
                       </div>
                       <div className="text-right">
                         <div className="text-2xl font-bold text-primary">
-                          ${hackathon.prize?.toLocaleString()}
+                          $
+                          {hackathon.prize
+                            ? formatNumber(hackathon.prize)
+                            : "0"}
                         </div>
                         <div className="text-sm text-muted-foreground">
                           Prize Pool
