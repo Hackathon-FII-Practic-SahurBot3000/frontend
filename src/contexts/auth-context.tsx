@@ -1,139 +1,107 @@
 "use client";
 
-import React, { createContext, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import {
-  useLogin,
-  useRegister,
-  useGetCurrentUser,
-} from "@/generated-api/auth-controller/auth-controller";
-import { useGetUserMe } from "@/generated-api/user-controller/user-controller";
-import type { AuthRequest, UserDto } from "@/generated-api/schemas";
+import React, { createContext, useContext, useState, useEffect } from "react";
+
+interface User {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatar?: string;
+}
 
 interface AuthContextType {
-  user: UserDto | null;
-  isAuthenticated: boolean;
+  user: User | null;
   isLoading: boolean;
-  login: (credentials: AuthRequest) => Promise<void>;
-  register: (credentials: AuthRequest) => Promise<void>;
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
-  refetchUser: () => void;
+  register: (
+    userData: Omit<User, "id"> & { password: string }
+  ) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter();
-
-  // API hooks
-  const loginMutation = useLogin();
-  const registerMutation = useRegister();
-  const { data: currentUserData, refetch: refetchCurrentUser } =
-    useGetCurrentUser({
-      query: {
-        enabled: false, // Only fetch when we have a token
-      },
-    });
-  const { data: userMeData, refetch: refetchUserMe } = useGetUserMe({
-    query: {
-      enabled: false, // Only fetch when we have a token
-    },
-  });
-
-  // Get user data from either endpoint, casting to UserDto since the generated types are generic
-  const user =
-    (userMeData?.data as unknown as UserDto) ||
-    (currentUserData?.data as unknown as UserDto) ||
-    null;
-
-  useEffect(() => {
-    // Check if user is authenticated on mount
-    const token = localStorage.getItem("authToken");
-    if (token) {
-      setIsAuthenticated(true);
-      // Try to fetch user data
-      refetchCurrentUser();
-      refetchUserMe();
-    }
-    setIsLoading(false);
-  }, [refetchCurrentUser, refetchUserMe]);
-
-  const login = async (credentials: AuthRequest) => {
-    try {
-      const response = await loginMutation.mutateAsync({ data: credentials });
-      const authData = response.data;
-
-      // Store token (assuming it's in the response)
-      if (authData.token) {
-        localStorage.setItem("authToken", authData.token);
-        setIsAuthenticated(true);
-
-        // Fetch user data after successful login
-        refetchCurrentUser();
-        refetchUserMe();
-
-        router.push("/hackathons");
-      }
-    } catch (error) {
-      console.error("Login failed:", error);
-      throw error;
-    }
-  };
-
-  const register = async (credentials: AuthRequest) => {
-    try {
-      const response = await registerMutation.mutateAsync({
-        data: credentials,
-      });
-      const authData = response.data;
-
-      // Store token (assuming it's in the response)
-      if (authData.token) {
-        localStorage.setItem("authToken", authData.token);
-        setIsAuthenticated(true);
-
-        // Fetch user data after successful registration
-        refetchCurrentUser();
-        refetchUserMe();
-
-        router.push("/hackathons");
-      }
-    } catch (error) {
-      console.error("Registration failed:", error);
-      throw error;
-    }
-  };
-
-  const logout = () => {
-    localStorage.removeItem("authToken");
-    setIsAuthenticated(false);
-    router.push("/");
-  };
-
-  const refetchUser = () => {
-    refetchCurrentUser();
-    refetchUserMe();
-  };
-
-  const value: AuthContextType = {
-    user,
-    isAuthenticated,
-    isLoading,
-    login,
-    register,
-    logout,
-    refetchUser,
-  };
-
-  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
-}
-
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
     throw new Error("useAuth must be used within an AuthProvider");
   }
   return context;
-}
+};
+
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Check for existing session on mount
+  useEffect(() => {
+    const checkAuth = () => {
+      const savedUser = localStorage.getItem("user");
+      if (savedUser) {
+        setUser(JSON.parse(savedUser));
+      }
+      setIsLoading(false);
+    };
+
+    checkAuth();
+  }, []);
+
+  const login = async (email: string, _password: string) => {
+    setIsLoading(true);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Mock user data
+    const mockUser: User = {
+      id: "1",
+      firstName: "John",
+      lastName: "Doe",
+      email: email,
+      avatar: "/api/placeholder/40/40",
+    };
+
+    setUser(mockUser);
+    localStorage.setItem("user", JSON.stringify(mockUser));
+    setIsLoading(false);
+  };
+
+  const register = async (
+    userData: Omit<User, "id"> & { password: string }
+  ) => {
+    setIsLoading(true);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Mock user creation - password would be handled by backend
+    const { password: _password, ...userInfo } = userData;
+    const newUser: User = {
+      id: Date.now().toString(),
+      ...userInfo,
+      avatar: "/api/placeholder/40/40",
+    };
+
+    setUser(newUser);
+    localStorage.setItem("user", JSON.stringify(newUser));
+    setIsLoading(false);
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem("user");
+  };
+
+  const value = {
+    user,
+    isLoading,
+    login,
+    logout,
+    register,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+};

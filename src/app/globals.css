@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer base {
-:root {
+  :root {
     --background: 60 9% 98%; /* Ivory white */
     --foreground: 210 11% 15%; /* Dark charcoal for text */
 
@@ -93,7 +93,7 @@
     transparent 1px
   );
   background-size: 20px 20px;
-  }
+}
 
 .grid-small {
   background-size: 20px 20px;
