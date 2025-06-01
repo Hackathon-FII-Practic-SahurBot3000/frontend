@@ -9,6 +9,7 @@ import { DotBackground } from "@/components/ui/dot-background";
 import { GridBackground } from "@/components/ui/grid-background";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { BalanceCard } from "@/components/balance/balance-card";
 import { useGetUserMe } from "@/generated-api/user-controller/user-controller";
 import { currentUser, hackathons } from "@/lib/mock-data";
 import {
@@ -63,6 +64,21 @@ const badges = [
 const userParticipatedHackathons = hackathons.filter((h) =>
   currentUser.entries.some((entry) => entry.hackathonId === h.id)
 );
+
+// Map hackathon status to HackathonCard expected format
+const mapHackathonStatus = (status: string): "upcoming" | "active" | "past" => {
+  switch (status) {
+    case "pending":
+      return "upcoming";
+    case "active":
+      return "active";
+    case "voting":
+    case "ended":
+      return "past";
+    default:
+      return "past";
+  }
+};
 
 export default function ProfilePage() {
   const [activeTab, setActiveTab] = useState("gallery");
@@ -120,133 +136,141 @@ export default function ProfilePage() {
             </div>
 
             {/* Profile Details */}
-            <div className="flex-1 w-full">
-              <Card className="border-charcoal-200 bg-ivory/90 backdrop-blur-sm">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl text-charcoal-900">
-                    About
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-charcoal-600 mb-4">{currentUser.bio}</p>
+            <div className="flex-1 w-full grid grid-cols-1 lg:grid-cols-3 gap-6">
+              {/* About Card */}
+              <div className="lg:col-span-2">
+                <Card className="border-charcoal-200 bg-ivory/90 backdrop-blur-sm">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xl text-charcoal-900">
+                      About
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-charcoal-600 mb-4">{currentUser.bio}</p>
 
-                  {/* Social Links */}
-                  <div className="flex gap-4 mb-6">
-                    {currentUser.links.instagram && (
-                      <Link
-                        href={
-                          currentUser.links.instagram.startsWith("http")
-                            ? currentUser.links.instagram
-                            : `https://${currentUser.links.instagram}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
-                      >
-                        <Instagram className="h-5 w-5" />
-                      </Link>
-                    )}
-                    {currentUser.links.dribbble && (
-                      <Link
-                        href={
-                          currentUser.links.dribbble.startsWith("http")
-                            ? currentUser.links.dribbble
-                            : `https://${currentUser.links.dribbble}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
-                      >
-                        <Dribbble className="h-5 w-5" />
-                      </Link>
-                    )}
-                    {currentUser.links.website && (
-                      <Link
-                        href={
-                          currentUser.links.website.startsWith("http")
-                            ? currentUser.links.website
-                            : `https://${currentUser.links.website}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
-                      >
-                        <Globe className="h-5 w-5" />
-                      </Link>
-                    )}
-                    {currentUser.links.behance && (
-                      <Link
-                        href={
-                          currentUser.links.behance.startsWith("http")
-                            ? currentUser.links.behance
-                            : `https://${currentUser.links.behance}`
-                        }
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
-                      >
-                        <ExternalLink className="h-5 w-5" />
-                      </Link>
-                    )}
-                  </div>
-
-                  <Separator className="my-4 bg-charcoal-100" />
-
-                  {/* Stats */}
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-                    <div className="text-center p-3 bg-charcoal-50 rounded-lg">
-                      <p className="text-2xl font-bold text-charcoal-900">
-                        {currentUser.entries.length}
-                      </p>
-                      <p className="text-sm text-charcoal-600">Submissions</p>
-                    </div>
-                    <div className="text-center p-3 bg-charcoal-50 rounded-lg">
-                      <p className="text-2xl font-bold text-charcoal-900">
-                        {currentUser.entries.filter((e) => e.isWinner).length}
-                      </p>
-                      <p className="text-sm text-charcoal-600">Wins</p>
-                    </div>
-                    <div className="text-center p-3 bg-charcoal-50 rounded-lg">
-                      <p className="text-2xl font-bold text-charcoal-900">
-                        {userParticipatedHackathons.length}
-                      </p>
-                      <p className="text-sm text-charcoal-600">Hackathons</p>
-                    </div>
-                    <div className="text-center p-3 bg-charcoal-50 rounded-lg">
-                      <p className="text-2xl font-bold text-charcoal-900">
-                        {currentUser.entries.reduce(
-                          (sum, entry) => sum + entry.votes,
-                          0
-                        )}
-                      </p>
-                      <p className="text-sm text-charcoal-600">Total Votes</p>
-                    </div>
-                  </div>
-
-                  {/* Badges */}
-                  <h3 className="text-lg font-medium text-charcoal-900 mb-3">
-                    Badges
-                  </h3>
-                  <div className="flex flex-wrap gap-3">
-                    {badges.map((badge) => (
-                      <div
-                        key={badge.id}
-                        className="flex items-center gap-2 px-3 py-2 rounded-lg bg-charcoal-50"
-                        title={badge.description}
-                      >
-                        <div
-                          className={`w-8 h-8 rounded-full flex items-center justify-center ${badge.color}`}
+                    {/* Social Links */}
+                    <div className="flex gap-4 mb-6">
+                      {currentUser.links.instagram && (
+                        <Link
+                          href={
+                            currentUser.links.instagram.startsWith("http")
+                              ? currentUser.links.instagram
+                              : `https://${currentUser.links.instagram}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
                         >
-                          <badge.icon className="h-4 w-4" />
-                        </div>
-                        <span className="text-sm font-medium text-charcoal-800">
-                          {badge.name}
-                        </span>
+                          <Instagram className="h-5 w-5" />
+                        </Link>
+                      )}
+                      {currentUser.links.dribbble && (
+                        <Link
+                          href={
+                            currentUser.links.dribbble.startsWith("http")
+                              ? currentUser.links.dribbble
+                              : `https://${currentUser.links.dribbble}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
+                        >
+                          <Dribbble className="h-5 w-5" />
+                        </Link>
+                      )}
+                      {currentUser.links.website && (
+                        <Link
+                          href={
+                            currentUser.links.website.startsWith("http")
+                              ? currentUser.links.website
+                              : `https://${currentUser.links.website}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
+                        >
+                          <Globe className="h-5 w-5" />
+                        </Link>
+                      )}
+                      {currentUser.links.behance && (
+                        <Link
+                          href={
+                            currentUser.links.behance.startsWith("http")
+                              ? currentUser.links.behance
+                              : `https://${currentUser.links.behance}`
+                          }
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-charcoal-500 hover:text-charcoal-900 transition-colors"
+                        >
+                          <ExternalLink className="h-5 w-5" />
+                        </Link>
+                      )}
+                    </div>
+
+                    <Separator className="my-4 bg-charcoal-100" />
+
+                    {/* Stats */}
+                    <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                      <div className="text-center p-3 bg-charcoal-50 rounded-lg">
+                        <p className="text-2xl font-bold text-charcoal-900">
+                          {currentUser.entries.length}
+                        </p>
+                        <p className="text-sm text-charcoal-600">Submissions</p>
                       </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
+                      <div className="text-center p-3 bg-charcoal-50 rounded-lg">
+                        <p className="text-2xl font-bold text-charcoal-900">
+                          {currentUser.entries.filter((e) => e.isWinner).length}
+                        </p>
+                        <p className="text-sm text-charcoal-600">Wins</p>
+                      </div>
+                      <div className="text-center p-3 bg-charcoal-50 rounded-lg">
+                        <p className="text-2xl font-bold text-charcoal-900">
+                          {userParticipatedHackathons.length}
+                        </p>
+                        <p className="text-sm text-charcoal-600">Hackathons</p>
+                      </div>
+                      <div className="text-center p-3 bg-charcoal-50 rounded-lg">
+                        <p className="text-2xl font-bold text-charcoal-900">
+                          {currentUser.entries.reduce(
+                            (sum, entry) => sum + entry.votes,
+                            0
+                          )}
+                        </p>
+                        <p className="text-sm text-charcoal-600">Total Votes</p>
+                      </div>
+                    </div>
+
+                    {/* Badges */}
+                    <h3 className="text-lg font-medium text-charcoal-900 mb-3">
+                      Badges
+                    </h3>
+                    <div className="flex flex-wrap gap-3">
+                      {badges.map((badge) => (
+                        <div
+                          key={badge.id}
+                          className="flex items-center gap-2 px-3 py-2 rounded-lg bg-charcoal-50"
+                          title={badge.description}
+                        >
+                          <div
+                            className={`w-8 h-8 rounded-full flex items-center justify-center ${badge.color}`}
+                          >
+                            <badge.icon className="h-4 w-4" />
+                          </div>
+                          <span className="text-sm font-medium text-charcoal-800">
+                            {badge.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              {/* Balance Card */}
+              <div className="lg:col-span-1">
+                <BalanceCard className="border-charcoal-200 bg-ivory/90 backdrop-blur-sm" />
+              </div>
             </div>
           </div>
         </div>
@@ -336,6 +360,7 @@ export default function ProfilePage() {
                     <HackathonCard
                       key={hackathon.id}
                       {...hackathon}
+                      status={mapHackathonStatus(hackathon.status)}
                       ctaText="View Details"
                       ctaVariant="outline"
                     />

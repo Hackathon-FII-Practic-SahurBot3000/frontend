@@ -32,6 +32,7 @@ import {
   Award,
   Music,
   Clock,
+  CheckCircle,
 } from "lucide-react";
 import Link from "next/link";
 
@@ -41,11 +42,13 @@ const audioSubmissions = [
     id: "audio1",
     title: "Neon Dreams Soundtrack",
     artist: "Alex Rivera",
-    artistAvatar: "/api/placeholder/100/100",
+    artistAvatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
     duration: 180, // 3 minutes
     category: "Electronic",
-    description: "A cyberpunk-inspired ambient track with synthesized melodies",
-    audioUrl: null as string | null, // No actual audio file for demo
+    description:
+      "A cyberpunk-inspired ambient track with synthesized melodies and atmospheric pads",
+    audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav", // Mock audio file
     originalityScore: 92,
     votes: 0,
   },
@@ -53,12 +56,13 @@ const audioSubmissions = [
     id: "audio2",
     title: "Forest Whispers",
     artist: "Maya Johnson",
-    artistAvatar: "/api/placeholder/100/100",
+    artistAvatar:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
     duration: 240, // 4 minutes
     category: "Ambient",
     description:
       "Natural sounds blended with ethereal vocals and soft instrumentation",
-    audioUrl: null as string | null, // No actual audio file for demo
+    audioUrl: "https://www.soundjay.com/nature/sounds/rain-01.wav", // Mock audio file
     originalityScore: 88,
     votes: 0,
   },
@@ -66,11 +70,13 @@ const audioSubmissions = [
     id: "audio3",
     title: "Quantum Beats",
     artist: "Elijah Chen",
-    artistAvatar: "/api/placeholder/100/100",
+    artistAvatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     duration: 200, // 3:20
     category: "Experimental",
-    description: "Rhythmic patterns generated from quantum computing data",
-    audioUrl: null as string | null, // No actual audio file for demo
+    description:
+      "Rhythmic patterns generated from quantum computing data with glitchy textures",
+    audioUrl: "https://www.soundjay.com/misc/sounds/beep-07a.wav", // Mock audio file
     originalityScore: 95,
     votes: 0,
   },
@@ -78,12 +84,69 @@ const audioSubmissions = [
     id: "audio4",
     title: "Urban Pulse",
     artist: "Sophia Patel",
-    artistAvatar: "/api/placeholder/100/100",
+    artistAvatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
     duration: 160, // 2:40
     category: "Hip-Hop",
     description: "City sounds mixed with modern beats and vocal samples",
-    audioUrl: null as string | null, // No actual audio file for demo
+    audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav", // Mock audio file
     originalityScore: 87,
+    votes: 0,
+  },
+  {
+    id: "audio5",
+    title: "Midnight Jazz Fusion",
+    artist: "Marcus Thompson",
+    artistAvatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
+    duration: 220, // 3:40
+    category: "Jazz",
+    description:
+      "Smooth jazz with electronic elements and improvised saxophone solos",
+    audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav", // Mock audio file
+    originalityScore: 91,
+    votes: 0,
+  },
+  {
+    id: "audio6",
+    title: "Ocean Depths",
+    artist: "Luna Rodriguez",
+    artistAvatar:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
+    duration: 300, // 5 minutes
+    category: "Ambient",
+    description:
+      "Deep underwater soundscape with whale songs and mysterious echoes",
+    audioUrl: "https://www.soundjay.com/nature/sounds/water-drop-1.wav", // Mock audio file
+    originalityScore: 89,
+    votes: 0,
+  },
+  {
+    id: "audio7",
+    title: "Retro Synthwave Drive",
+    artist: "Kai Nakamura",
+    artistAvatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
+    duration: 195, // 3:15
+    category: "Synthwave",
+    description:
+      "80s-inspired synthwave with driving basslines and nostalgic melodies",
+    audioUrl: "https://www.soundjay.com/misc/sounds/beep-07a.wav", // Mock audio file
+    originalityScore: 93,
+    votes: 0,
+  },
+  {
+    id: "audio8",
+    title: "Acoustic Storytelling",
+    artist: "Emma Wilson",
+    artistAvatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
+    duration: 180, // 3 minutes
+    category: "Folk",
+    description:
+      "Intimate acoustic guitar with spoken word poetry about human connection",
+    audioUrl: "https://www.soundjay.com/misc/sounds/bell-ringing-05.wav", // Mock audio file
+    originalityScore: 86,
     votes: 0,
   },
 ];
@@ -100,17 +163,14 @@ export default function AudioVotingPage() {
 
   const audioRef = useRef<HTMLAudioElement>(null);
 
-  const submissions = audioSubmissions.filter(
-    (sub) => !votedSubmissions.includes(sub.id)
-  );
-  const currentSubmission = submissions[currentIndex];
-  const hasSubmissions = submissions.length > 0;
+  // Limit to first 3 submissions
+  const maxSubmissions = 3;
+  const limitedSubmissions = audioSubmissions.slice(0, maxSubmissions);
+  const currentSubmission = limitedSubmissions[currentIndex];
+  const hasSubmissions = currentIndex < limitedSubmissions.length;
+  const hasCompletedVoting = votedSubmissions.length >= maxSubmissions;
 
-  const progressValue = hasSubmissions
-    ? ((audioSubmissions.length - submissions.length) /
-        audioSubmissions.length) *
-      100
-    : 100;
+  const progressValue = (votedSubmissions.length / maxSubmissions) * 100;
 
   // Motion values for swipe animation
   const x = useMotionValue(0);
@@ -139,7 +199,7 @@ export default function AudioVotingPage() {
     setCurrentTime(0);
   }, [currentIndex]);
 
-  // Update the togglePlay function to handle missing audio files
+  // Update the togglePlay function to handle audio files
   const togglePlay = async () => {
     if (!currentSubmission?.audioUrl) {
       setAudioError(true);
@@ -190,7 +250,8 @@ export default function AudioVotingPage() {
     if (!currentSubmission) return;
 
     setDirection(isUpvote ? "right" : "left");
-    setVotedSubmissions([...votedSubmissions, id]);
+    const newVotedSubmissions = [...votedSubmissions, id];
+    setVotedSubmissions(newVotedSubmissions);
 
     // Pause audio when voting - with proper error handling
     if (audioRef.current && isPlaying) {
@@ -198,9 +259,9 @@ export default function AudioVotingPage() {
       setIsPlaying(false);
     }
 
-    // Move to next card after a short delay
+    // Move to next card after a short delay, but only if we haven't completed voting
     setTimeout(() => {
-      if (currentIndex < submissions.length - 1) {
+      if (newVotedSubmissions.length < maxSubmissions) {
         setCurrentIndex(currentIndex + 1);
       }
       setDirection(null);
@@ -224,7 +285,7 @@ export default function AudioVotingPage() {
 
   // Update the skipToNext and skipToPrevious functions to properly handle audio state
   const skipToNext = () => {
-    if (currentIndex < submissions.length - 1) {
+    if (currentIndex < limitedSubmissions.length - 1) {
       // Pause current audio before changing
       if (audioRef.current && isPlaying) {
         audioRef.current.pause();
@@ -285,8 +346,7 @@ export default function AudioVotingPage() {
                   Your voting progress
                 </span>
                 <span className="text-sm font-medium text-charcoal-900">
-                  {audioSubmissions.length - submissions.length}/
-                  {audioSubmissions.length}
+                  {votedSubmissions.length}/{maxSubmissions}
                 </span>
               </div>
               <Progress value={progressValue} className="h-2 bg-charcoal-100" />
@@ -294,7 +354,7 @@ export default function AudioVotingPage() {
 
             {/* Audio Player Area */}
             <div className="relative h-[700px] max-w-md mx-auto">
-              {hasSubmissions ? (
+              {hasSubmissions && !hasCompletedVoting ? (
                 <motion.div
                   className="absolute inset-0"
                   style={{ x, rotate, opacity: cardOpacity }}
@@ -322,13 +382,8 @@ export default function AudioVotingPage() {
                                 {formatTime(currentSubmission.duration)}
                               </span>
                             </div>
-                            {!currentSubmission.audioUrl && (
-                              <div className="mt-2 px-3 py-1 bg-charcoal-300 rounded-full text-xs text-charcoal-700">
-                                Demo Mode - No Audio
-                              </div>
-                            )}
                           </div>
-                          {/* Audio element - only render if audioUrl exists */}
+                          {/* Audio element - render for all submissions */}
                           {currentSubmission.audioUrl && (
                             <audio
                               ref={audioRef}
@@ -344,6 +399,10 @@ export default function AudioVotingPage() {
                               <source
                                 src={currentSubmission.audioUrl}
                                 type="audio/mpeg"
+                              />
+                              <source
+                                src={currentSubmission.audioUrl}
+                                type="audio/wav"
                               />
                               Your browser does not support the audio element.
                             </audio>
@@ -415,13 +474,7 @@ export default function AudioVotingPage() {
                               <Button
                                 size="icon"
                                 onClick={togglePlay}
-                                disabled={!currentSubmission.audioUrl}
-                                className="h-12 w-12 bg-charcoal-900 hover:bg-charcoal-800 text-ivory disabled:opacity-50 disabled:cursor-not-allowed"
-                                title={
-                                  !currentSubmission.audioUrl
-                                    ? "No audio available in demo mode"
-                                    : ""
-                                }
+                                className="h-12 w-12 bg-charcoal-900 hover:bg-charcoal-800 text-ivory"
                               >
                                 {isPlaying ? (
                                   <Pause className="h-6 w-6" />
@@ -435,7 +488,7 @@ export default function AudioVotingPage() {
                                 size="icon"
                                 onClick={skipToNext}
                                 disabled={
-                                  currentIndex >= submissions.length - 1
+                                  currentIndex >= limitedSubmissions.length - 1
                                 }
                                 className="border-charcoal-300"
                               >
@@ -449,8 +502,7 @@ export default function AudioVotingPage() {
                                 variant="ghost"
                                 size="icon"
                                 onClick={() => setIsMuted(!isMuted)}
-                                disabled={!currentSubmission.audioUrl}
-                                className="h-8 w-8 disabled:opacity-50"
+                                className="h-8 w-8"
                               >
                                 {isMuted ? (
                                   <VolumeX className="h-4 w-4" />
@@ -464,20 +516,8 @@ export default function AudioVotingPage() {
                                 max={100}
                                 step={1}
                                 className="flex-1"
-                                disabled={!currentSubmission.audioUrl}
                               />
                             </div>
-
-                            {/* Demo Mode Message */}
-                            {!currentSubmission.audioUrl && (
-                              <div className="text-center p-3 bg-charcoal-50 rounded-lg border border-charcoal-200">
-                                <p className="text-sm text-charcoal-600">
-                                  🎵 This is a demo version. In the full app,
-                                  you would be able to listen to actual audio
-                                  submissions.
-                                </p>
-                              </div>
-                            )}
                           </div>
 
                           {/* Artist Info */}
@@ -526,23 +566,32 @@ export default function AudioVotingPage() {
                 </motion.div>
               ) : (
                 <Card className="h-full border-charcoal-200 bg-ivory/90 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center">
-                  <Music className="h-16 w-16 text-charcoal-300 mb-4" />
+                  <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
                   <h3 className="text-xl font-semibold text-charcoal-900 mb-2">
-                    All caught up!
+                    Audio Voting Complete!
                   </h3>
                   <p className="text-charcoal-600 mb-6">
-                    You&apos;ve voted on all available audio submissions. Check
-                    back later for more.
+                    Thank you for participating! You&apos;ve successfully voted
+                    on {maxSubmissions} audio submissions. Your votes help the
+                    community discover the best audio content.
                   </p>
-                  <Button className="bg-charcoal-900 hover:bg-charcoal-800 text-ivory">
-                    <Link href="/hackathons">Explore Hackathons</Link>
-                  </Button>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button className="bg-charcoal-900 hover:bg-charcoal-800 text-ivory">
+                      <Link href="/hackathons">Explore More Hackathons</Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="border-charcoal-300 text-charcoal-700 hover:bg-charcoal-50"
+                    >
+                      <Link href="/audio-voting">Listen to More Audio</Link>
+                    </Button>
+                  </div>
                 </Card>
               )}
             </div>
 
             {/* Voting buttons */}
-            {hasSubmissions && currentSubmission && (
+            {hasSubmissions && !hasCompletedVoting && currentSubmission && (
               <div className="flex justify-center gap-4 mt-8">
                 <Button
                   size="lg"
@@ -563,37 +612,40 @@ export default function AudioVotingPage() {
             )}
 
             {/* Navigation buttons */}
-            <div className="flex justify-between mt-8">
-              <Button
-                variant="ghost"
-                className="text-charcoal-700 hover:text-charcoal-900 md:hidden"
-              >
-                <Link href="/hackathons" className="flex items-center">
-                  <ChevronLeft className="mr-2 h-4 w-4" />
-                  Back
-                </Link>
-              </Button>
-              <div className="flex gap-2 ml-auto">
+            {!hasCompletedVoting && (
+              <div className="flex justify-between mt-8">
                 <Button
-                  variant="outline"
-                  className="border-charcoal-300 text-charcoal-700 hover:bg-charcoal-50"
-                  disabled={currentIndex === 0 || !hasSubmissions}
-                  onClick={skipToPrevious}
+                  variant="ghost"
+                  className="text-charcoal-700 hover:text-charcoal-900 md:hidden"
                 >
-                  <SkipBack className="h-4 w-4" />
+                  <Link href="/hackathons" className="flex items-center">
+                    <ChevronLeft className="mr-2 h-4 w-4" />
+                    Back
+                  </Link>
                 </Button>
-                <Button
-                  variant="outline"
-                  className="border-charcoal-300 text-charcoal-700 hover:bg-charcoal-50"
-                  disabled={
-                    currentIndex >= submissions.length - 1 || !hasSubmissions
-                  }
-                  onClick={skipToNext}
-                >
-                  <SkipForward className="h-4 w-4" />
-                </Button>
+                <div className="flex gap-2 ml-auto">
+                  <Button
+                    variant="outline"
+                    className="border-charcoal-300 text-charcoal-700 hover:bg-charcoal-50"
+                    disabled={currentIndex === 0 || !hasSubmissions}
+                    onClick={skipToPrevious}
+                  >
+                    <SkipBack className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="border-charcoal-300 text-charcoal-700 hover:bg-charcoal-50"
+                    disabled={
+                      currentIndex >= limitedSubmissions.length - 1 ||
+                      !hasSubmissions
+                    }
+                    onClick={skipToNext}
+                  >
+                    <SkipForward className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </GridBackground>

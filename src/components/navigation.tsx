@@ -35,7 +35,6 @@ import {
   Sun,
   HelpCircle,
   Shield,
-  Plus,
 } from "lucide-react";
 
 const routes = [
@@ -203,16 +202,11 @@ export default function Navigation() {
                   href={route.path}
                   className={cn(
                     "text-sm font-medium transition-colors hover:text-foreground",
-                    route.name === "Create Hackathon"
-                      ? "bg-charcoal-900 text-ivory px-3 py-1.5 rounded-md hover:bg-charcoal-800"
-                      : pathname === route.path
+                    pathname === route.path
                       ? "text-foreground"
                       : "text-muted-foreground"
                   )}
                 >
-                  {route.name === "Create Hackathon" && (
-                    <Plus className="h-4 w-4 mr-1 inline" />
-                  )}
                   {route.name}
                 </Link>
               ))}
@@ -384,16 +378,10 @@ export default function Navigation() {
                           "flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md",
                           pathname === route.path
                             ? "bg-accent text-accent-foreground"
-                            : "text-muted-foreground",
-                          route.name === "Create Hackathon"
-                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
-                            : ""
+                            : "text-muted-foreground"
                         )}
                         onClick={() => setMobileMenuOpen(false)}
                       >
-                        {route.name === "Create Hackathon" && (
-                          <Plus className="h-4 w-4" />
-                        )}
                         {route.name}
                       </Link>
                     ))}

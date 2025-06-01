@@ -35,6 +35,7 @@ export type User = {
   username: string;
   avatar: string;
   bio: string;
+  balance: number; // User's account balance in euros
   links: {
     instagram?: string;
     behance?: string;
@@ -491,6 +492,167 @@ export const hackathons: Hackathon[] = [
       prize: 4200,
     },
   },
+  {
+    id: "17",
+    title: "Urban Photography Stories",
+    description:
+      "Capture the essence of city life through compelling street photography that tells a story",
+    theme: "City Chronicles",
+    startDate: "2024-02-18",
+    endDate: "2024-03-03",
+    category: "Visual Art",
+    image:
+      "https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=600&h=400&fit=crop&crop=center",
+    sponsor: "National Geographic",
+    entryFee: "€2",
+    entriesCount: 178,
+    status: "voting",
+    areas: ["Photography", "Street Art", "Documentary"],
+    prize: 4800,
+    participants: 298,
+    deadline: "2024-03-03",
+    submissions: 178,
+    tags: ["Photography", "Urban", "Stories"],
+    difficulty: "Intermediate",
+  },
+  {
+    id: "18",
+    title: "Minimalist UI Design",
+    description:
+      "Design clean, functional user interfaces that prioritize simplicity and user experience",
+    theme: "Less is More",
+    startDate: "2024-02-22",
+    endDate: "2024-03-07",
+    category: "Visual Art",
+    image:
+      "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&h=400&fit=crop&crop=center",
+    sponsor: "Figma",
+    entryFee: "€1",
+    entriesCount: 156,
+    status: "voting",
+    areas: ["UI Design", "UX Design", "Minimalism"],
+    prize: 6200,
+    participants: 234,
+    deadline: "2024-03-07",
+    submissions: 156,
+    tags: ["UI", "Minimalist", "Design"],
+    difficulty: "Intermediate",
+  },
+  {
+    id: "19",
+    title: "Podcast Storytelling",
+    description:
+      "Create compelling audio narratives that engage listeners through innovative storytelling techniques",
+    theme: "Audio Narratives",
+    startDate: "2024-02-16",
+    endDate: "2024-03-01",
+    category: "Audio & Music",
+    image:
+      "https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=600&h=400&fit=crop&crop=center",
+    sponsor: "Spotify",
+    entryFee: "Free",
+    entriesCount: 89,
+    status: "voting",
+    areas: ["Podcasting", "Audio Production", "Storytelling"],
+    prize: 3800,
+    participants: 167,
+    deadline: "2024-03-01",
+    submissions: 89,
+    tags: ["Podcast", "Audio", "Storytelling"],
+    difficulty: "Beginner",
+  },
+  {
+    id: "20",
+    title: "Sustainable Fashion Design",
+    description:
+      "Design eco-friendly fashion pieces that combine style with environmental consciousness",
+    theme: "Eco-Fashion Forward",
+    startDate: "2024-02-14",
+    endDate: "2024-02-28",
+    category: "Visual Art",
+    image:
+      "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&h=400&fit=crop&crop=center",
+    sponsor: "Patagonia",
+    entryFee: "€3",
+    entriesCount: 123,
+    status: "voting",
+    areas: ["Fashion Design", "Sustainability", "Textile Innovation"],
+    prize: 7200,
+    participants: 189,
+    deadline: "2024-02-28",
+    submissions: 123,
+    tags: ["Fashion", "Sustainable", "Design"],
+    difficulty: "Advanced",
+  },
+  {
+    id: "21",
+    title: "Interactive Data Visualization",
+    description:
+      "Transform complex datasets into engaging, interactive visual experiences that tell compelling stories",
+    theme: "Data Stories",
+    startDate: "2024-02-19",
+    endDate: "2024-03-04",
+    category: "Business & Strategy",
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop&crop=center",
+    sponsor: "Tableau",
+    entryFee: "€2",
+    entriesCount: 67,
+    status: "voting",
+    areas: ["Data Visualization", "Interactive Design", "Analytics"],
+    prize: 5400,
+    participants: 145,
+    deadline: "2024-03-04",
+    submissions: 67,
+    tags: ["Data", "Visualization", "Interactive"],
+    difficulty: "Advanced",
+  },
+  {
+    id: "22",
+    title: "Haiku Poetry Collection",
+    description:
+      "Compose beautiful haiku poems that capture moments of nature, emotion, and human experience",
+    theme: "Moments in Verse",
+    startDate: "2024-02-21",
+    endDate: "2024-03-06",
+    category: "Writing",
+    image:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop&crop=center",
+    sponsor: "Poetry Society",
+    entryFee: "Free",
+    entriesCount: 234,
+    status: "voting",
+    areas: ["Poetry", "Haiku", "Nature Writing"],
+    prize: 2800,
+    participants: 312,
+    deadline: "2024-03-06",
+    submissions: 234,
+    tags: ["Haiku", "Poetry", "Nature"],
+    difficulty: "Beginner",
+  },
+  {
+    id: "23",
+    title: "Virtual Reality Experiences",
+    description:
+      "Design immersive VR experiences that transport users to new worlds and perspectives",
+    theme: "Immersive Worlds",
+    startDate: "2024-02-17",
+    endDate: "2024-03-02",
+    category: "Visual Art",
+    image:
+      "https://images.unsplash.com/photo-1592478411213-6153e4ebc696?w=600&h=400&fit=crop&crop=center",
+    sponsor: "Meta",
+    entryFee: "€4",
+    entriesCount: 78,
+    status: "voting",
+    areas: ["VR Design", "3D Modeling", "Interactive Media"],
+    prize: 8500,
+    participants: 134,
+    deadline: "2024-03-02",
+    submissions: 78,
+    tags: ["VR", "Immersive", "3D"],
+    difficulty: "Advanced",
+  },
 ];
 
 // Mock current user
@@ -501,6 +663,7 @@ export const currentUser: User = {
   avatar:
     "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
   bio: "Digital artist and creative coder exploring the intersection of technology and art.",
+  balance: 100,
   links: {
     instagram: "instagram.com/creativealex",
     behance: "behance.net/creativealex",
@@ -796,7 +959,7 @@ export const sponsorChallenges: SponsorChallenge[] = [
       "Create a concept that addresses climate change through creative technology",
     sponsor: "EcoTech Solutions",
     logo: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=100&h=100&fit=crop&crop=center",
-    prize: "$1,000 + Mentorship",
+    prize: "$100 + Mentorship",
     hackathonId: "2",
   },
   {

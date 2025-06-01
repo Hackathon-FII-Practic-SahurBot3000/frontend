@@ -25,6 +25,7 @@ import {
   ChevronLeft,
   ChevronRight,
   Info,
+  CheckCircle,
 } from "lucide-react";
 import { submissionsForVoting } from "@/lib/mock-data";
 import Image from "next/image";
@@ -35,17 +36,14 @@ export default function VotingPage() {
   const [direction, setDirection] = useState<"left" | "right" | null>(null);
   const [votedSubmissions, setVotedSubmissions] = useState<string[]>([]);
 
-  const submissions = submissionsForVoting.filter(
-    (sub) => !votedSubmissions.includes(sub.id)
-  );
-  const currentSubmission = submissions[currentIndex];
-  const hasSubmissions = submissions.length > 0;
+  // Limit to first 3 submissions
+  const maxSubmissions = 3;
+  const limitedSubmissions = submissionsForVoting.slice(0, maxSubmissions);
+  const currentSubmission = limitedSubmissions[currentIndex];
+  const hasSubmissions = currentIndex < limitedSubmissions.length;
+  const hasCompletedVoting = votedSubmissions.length >= maxSubmissions;
 
-  const progressValue = hasSubmissions
-    ? ((submissionsForVoting.length - submissions.length) /
-        submissionsForVoting.length) *
-      100
-    : 100;
+  const progressValue = (votedSubmissions.length / maxSubmissions) * 100;
 
   // Motion values for swipe animation
   const x = useMotionValue(0);
@@ -58,11 +56,12 @@ export default function VotingPage() {
     if (!currentSubmission) return;
 
     setDirection(isUpvote ? "right" : "left");
-    setVotedSubmissions([...votedSubmissions, id]);
+    const newVotedSubmissions = [...votedSubmissions, id];
+    setVotedSubmissions(newVotedSubmissions);
 
-    // Move to next card after a short delay
+    // Move to next card after a short delay, but only if we haven't completed voting
     setTimeout(() => {
-      if (currentIndex < submissions.length - 1) {
+      if (newVotedSubmissions.length < maxSubmissions) {
         setCurrentIndex(currentIndex + 1);
       }
       setDirection(null);
@@ -121,8 +120,7 @@ export default function VotingPage() {
                   Your voting progress
                 </span>
                 <span className="text-sm font-medium text-charcoal-900">
-                  {submissionsForVoting.length - submissions.length}/
-                  {submissionsForVoting.length}
+                  {votedSubmissions.length}/{maxSubmissions}
                 </span>
               </div>
               <Progress value={progressValue} className="h-2 bg-charcoal-100" />
@@ -130,7 +128,7 @@ export default function VotingPage() {
 
             {/* Voting area */}
             <div className="relative h-[600px] max-w-md mx-auto">
-              {hasSubmissions ? (
+              {hasSubmissions && !hasCompletedVoting ? (
                 <motion.div
                   className="absolute inset-0"
                   style={{ x, rotate, opacity: cardOpacity }}
@@ -234,23 +232,32 @@ export default function VotingPage() {
                 </motion.div>
               ) : (
                 <Card className="h-full border-charcoal-200 bg-ivory/90 backdrop-blur-sm flex flex-col items-center justify-center p-8 text-center">
-                  <Award className="h-16 w-16 text-charcoal-300 mb-4" />
+                  <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
                   <h3 className="text-xl font-semibold text-charcoal-900 mb-2">
-                    All caught up!
+                    Voting Complete!
                   </h3>
                   <p className="text-charcoal-600 mb-6">
-                    You&apos;ve voted on all available submissions. Check back
-                    later for more.
+                    Thank you for participating! You&apos;ve successfully voted
+                    on {maxSubmissions} submissions. Your votes help the
+                    community discover the best content.
                   </p>
-                  <Button className="bg-charcoal-900 hover:bg-charcoal-800 text-ivory">
-                    <Link href="/hackathons">Explore Hackathons</Link>
-                  </Button>
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button className="bg-charcoal-900 hover:bg-charcoal-800 text-ivory">
+                      <Link href="/hackathons">Explore More Hackathons</Link>
+                    </Button>
+                    <Button
+                      variant="outline"
+                      className="border-charcoal-300 text-charcoal-700 hover:bg-charcoal-50"
+                    >
+                      <Link href="/entries">View All Entries</Link>
+                    </Button>
+                  </div>
                 </Card>
               )}
             </div>
 
             {/* Voting buttons */}
-            {hasSubmissions && currentSubmission && (
+            {hasSubmissions && !hasCompletedVoting && currentSubmission && (
               <div className="flex justify-center gap-4 mt-8">
                 <Button
                   size="lg"
@@ -271,45 +278,48 @@ export default function VotingPage() {
             )}
 
             {/* Navigation buttons */}
-            <div className="flex justify-between mt-8">
-              <Button
-                variant="ghost"
-                className="text-charcoal-700 hover:text-charcoal-900 md:hidden"
-              >
-                <Link href="/hackathons" className="flex items-center">
-                  <ChevronLeft className="mr-2 h-4 w-4" />
-                  Back
-                </Link>
-              </Button>
-              <div className="flex gap-2 ml-auto">
+            {!hasCompletedVoting && (
+              <div className="flex justify-between mt-8">
                 <Button
-                  variant="outline"
-                  className="border-charcoal-300 text-charcoal-700 hover:bg-charcoal-50"
-                  disabled={currentIndex === 0 || !hasSubmissions}
-                  onClick={() => {
-                    if (currentIndex > 0) {
-                      setCurrentIndex(currentIndex - 1);
-                    }
-                  }}
+                  variant="ghost"
+                  className="text-charcoal-700 hover:text-charcoal-900 md:hidden"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <Link href="/hackathons" className="flex items-center">
+                    <ChevronLeft className="mr-2 h-4 w-4" />
+                    Back
+                  </Link>
                 </Button>
-                <Button
-                  variant="outline"
-                  className="border-charcoal-300 text-charcoal-700 hover:bg-charcoal-50"
-                  disabled={
-                    currentIndex >= submissions.length - 1 || !hasSubmissions
-                  }
-                  onClick={() => {
-                    if (currentIndex < submissions.length - 1) {
-                      setCurrentIndex(currentIndex + 1);
+                <div className="flex gap-2 ml-auto">
+                  <Button
+                    variant="outline"
+                    className="border-charcoal-300 text-charcoal-700 hover:bg-charcoal-50"
+                    disabled={currentIndex === 0 || !hasSubmissions}
+                    onClick={() => {
+                      if (currentIndex > 0) {
+                        setCurrentIndex(currentIndex - 1);
+                      }
+                    }}
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                  </Button>
+                  <Button
+                    variant="outline"
+                    className="border-charcoal-300 text-charcoal-700 hover:bg-charcoal-50"
+                    disabled={
+                      currentIndex >= limitedSubmissions.length - 1 ||
+                      !hasSubmissions
                     }
-                  }}
-                >
-                  <ChevronRight className="h-4 w-4" />
-                </Button>
+                    onClick={() => {
+                      if (currentIndex < limitedSubmissions.length - 1) {
+                        setCurrentIndex(currentIndex + 1);
+                      }
+                    }}
+                  >
+                    <ChevronRight className="h-4 w-4" />
+                  </Button>
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </GridBackground>
