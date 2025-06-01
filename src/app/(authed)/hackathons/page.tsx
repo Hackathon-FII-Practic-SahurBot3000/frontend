@@ -117,6 +117,27 @@ export default function HackathonsPage() {
     }
   };
 
+  const getHackathonImage = (hackathon: (typeof hackathons)[0]) => {
+    // Use the image from hackathon data if available, otherwise use a fallback based on category
+    if (hackathon.image) {
+      return hackathon.image;
+    }
+
+    // Fallback images based on category
+    switch (hackathon.category) {
+      case "Visual Art":
+        return "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&h=400&fit=crop&crop=center";
+      case "Writing":
+        return "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop&crop=center";
+      case "Audio & Music":
+        return "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop&crop=center";
+      case "Business & Strategy":
+        return "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&h=400&fit=crop&crop=center";
+      default:
+        return "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=600&h=400&fit=crop&crop=center";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-ivory">
       {/* Hero Section with Featured Hackathon */}
@@ -397,10 +418,12 @@ export default function HackathonsPage() {
                           key={hackathon.id}
                           className="border-border bg-card hover:shadow-lg transition-shadow"
                         >
-                          <div className="aspect-video bg-muted rounded-t-lg mb-4 flex items-center justify-center">
-                            <div className="text-muted-foreground text-sm">
-                              {hackathon.category} Challenge
-                            </div>
+                          <div className="aspect-video bg-muted rounded-t-lg mb-4 overflow-hidden">
+                            <img
+                              src={getHackathonImage(hackathon)}
+                              alt={hackathon.title}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                           <CardHeader className="pb-3">
                             <div className="flex items-start justify-between mb-2">
@@ -516,10 +539,12 @@ export default function HackathonsPage() {
                           key={hackathon.id}
                           className="border-border bg-card hover:shadow-lg transition-shadow"
                         >
-                          <div className="aspect-video bg-muted rounded-t-lg mb-4 flex items-center justify-center">
-                            <div className="text-muted-foreground text-sm">
-                              {hackathon.category} Challenge
-                            </div>
+                          <div className="aspect-video bg-muted rounded-t-lg mb-4 overflow-hidden">
+                            <img
+                              src={getHackathonImage(hackathon)}
+                              alt={hackathon.title}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                           <CardHeader className="pb-3">
                             <div className="flex items-start justify-between mb-2">
@@ -635,10 +660,12 @@ export default function HackathonsPage() {
                           key={hackathon.id}
                           className="border-border bg-card hover:shadow-lg transition-shadow"
                         >
-                          <div className="aspect-video bg-muted rounded-t-lg mb-4 flex items-center justify-center">
-                            <div className="text-muted-foreground text-sm">
-                              {hackathon.category} Challenge
-                            </div>
+                          <div className="aspect-video bg-muted rounded-t-lg mb-4 overflow-hidden">
+                            <img
+                              src={getHackathonImage(hackathon)}
+                              alt={hackathon.title}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                           <CardHeader className="pb-3">
                             <div className="flex items-start justify-between mb-2">
@@ -754,10 +781,12 @@ export default function HackathonsPage() {
                           key={hackathon.id}
                           className="border-border bg-card hover:shadow-lg transition-shadow"
                         >
-                          <div className="aspect-video bg-muted rounded-t-lg mb-4 flex items-center justify-center">
-                            <div className="text-muted-foreground text-sm">
-                              {hackathon.category} Challenge
-                            </div>
+                          <div className="aspect-video bg-muted rounded-t-lg mb-4 overflow-hidden">
+                            <img
+                              src={getHackathonImage(hackathon)}
+                              alt={hackathon.title}
+                              className="w-full h-full object-cover"
+                            />
                           </div>
                           <CardHeader className="pb-3">
                             <div className="flex items-start justify-between mb-2">
@@ -865,10 +894,12 @@ export default function HackathonsPage() {
                     key={hackathon.id}
                     className="border-border bg-card hover:shadow-lg transition-shadow"
                   >
-                    <div className="aspect-video bg-muted rounded-t-lg mb-4 flex items-center justify-center">
-                      <div className="text-muted-foreground text-sm">
-                        {hackathon.category} Challenge
-                      </div>
+                    <div className="aspect-video bg-muted rounded-t-lg mb-4 overflow-hidden">
+                      <img
+                        src={getHackathonImage(hackathon)}
+                        alt={hackathon.title}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between mb-2">
@@ -975,10 +1006,12 @@ export default function HackathonsPage() {
                     key={hackathon.id}
                     className="border-border bg-card hover:shadow-lg transition-shadow"
                   >
-                    <div className="aspect-video bg-muted rounded-t-lg mb-4 flex items-center justify-center">
-                      <div className="text-muted-foreground text-sm">
-                        {hackathon.category} Challenge
-                      </div>
+                    <div className="aspect-video bg-muted rounded-t-lg mb-4 overflow-hidden">
+                      <img
+                        src={getHackathonImage(hackathon)}
+                        alt={hackathon.title}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between mb-2">
@@ -1085,10 +1118,12 @@ export default function HackathonsPage() {
                     key={hackathon.id}
                     className="border-border bg-card hover:shadow-lg transition-shadow"
                   >
-                    <div className="aspect-video bg-muted rounded-t-lg mb-4 flex items-center justify-center">
-                      <div className="text-muted-foreground text-sm">
-                        {hackathon.category} Challenge
-                      </div>
+                    <div className="aspect-video bg-muted rounded-t-lg mb-4 overflow-hidden">
+                      <img
+                        src={getHackathonImage(hackathon)}
+                        alt={hackathon.title}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between mb-2">
@@ -1195,10 +1230,12 @@ export default function HackathonsPage() {
                     key={hackathon.id}
                     className="border-border bg-card hover:shadow-lg transition-shadow"
                   >
-                    <div className="aspect-video bg-muted rounded-t-lg mb-4 flex items-center justify-center">
-                      <div className="text-muted-foreground text-sm">
-                        {hackathon.category} Challenge
-                      </div>
+                    <div className="aspect-video bg-muted rounded-t-lg mb-4 overflow-hidden">
+                      <img
+                        src={getHackathonImage(hackathon)}
+                        alt={hackathon.title}
+                        className="w-full h-full object-cover"
+                      />
                     </div>
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between mb-2">

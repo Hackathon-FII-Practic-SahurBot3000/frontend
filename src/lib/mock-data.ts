@@ -95,7 +95,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-02-15",
     endDate: "2024-02-29",
     category: "Visual Art",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1541961017774-22349e4a1262?w=600&h=400&fit=crop&crop=center",
     sponsor: "Adobe Creative Cloud",
     entryFee: "Free",
     entriesCount: 0,
@@ -117,7 +118,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-03-01",
     endDate: "2024-03-15",
     category: "Writing",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=600&h=400&fit=crop&crop=center",
     sponsor: "Sci-Fi Writers Guild",
     entryFee: "€1",
     entriesCount: 0,
@@ -139,7 +141,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-03-05",
     endDate: "2024-03-20",
     category: "Business & Strategy",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=600&h=400&fit=crop&crop=center",
     sponsor: "Y Combinator",
     entryFee: "€3",
     entriesCount: 0,
@@ -161,7 +164,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-03-10",
     endDate: "2024-03-25",
     category: "Audio & Music",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop&crop=center",
     sponsor: "Synthwave Records",
     entryFee: "Free",
     entriesCount: 0,
@@ -185,7 +189,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-03-01",
     endDate: "2024-03-15",
     category: "Visual Art",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1617791160588-241658c0f566?w=600&h=400&fit=crop&crop=center",
     sponsor: "Wacom",
     entryFee: "€1",
     entriesCount: 156,
@@ -207,7 +212,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-02-20",
     endDate: "2024-03-05",
     category: "Audio & Music",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop&crop=center",
     sponsor: "Native Instruments",
     entryFee: "Free",
     entriesCount: 78,
@@ -229,7 +235,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-03-01",
     endDate: "2024-03-16",
     category: "Business & Strategy",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&h=400&fit=crop&crop=center",
     sponsor: "Stripe",
     entryFee: "€3",
     entriesCount: 56,
@@ -250,7 +257,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-02-25",
     endDate: "2024-03-10",
     category: "Writing",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop&crop=center",
     sponsor: "Poetry Foundation",
     entryFee: "Free",
     entriesCount: 89,
@@ -274,7 +282,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-02-10",
     endDate: "2024-02-25",
     category: "Writing",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=600&h=400&fit=crop&crop=center",
     sponsor: "Penguin Random House",
     entryFee: "Free",
     entriesCount: 67,
@@ -296,7 +305,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-03-10",
     endDate: "2024-03-25",
     category: "Audio & Music",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=600&h=400&fit=crop&crop=center",
     sponsor: "Ableton",
     entryFee: "€1",
     entriesCount: 92,
@@ -318,7 +328,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-02-15",
     endDate: "2024-03-01",
     category: "Visual Art",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=600&h=400&fit=crop&crop=center",
     sponsor: "Digital Arts Museum",
     entryFee: "€2",
     entriesCount: 134,
@@ -340,7 +351,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-02-20",
     endDate: "2024-03-05",
     category: "Business & Strategy",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=600&h=400&fit=crop&crop=center",
     sponsor: "Impact Investors Network",
     entryFee: "€5",
     entriesCount: 45,
@@ -364,7 +376,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-03-05",
     endDate: "2024-03-20",
     category: "Writing",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&h=400&fit=crop&crop=center",
     sponsor: "Tor Books",
     entryFee: "€2",
     entriesCount: 43,
@@ -380,7 +393,8 @@ export const hackathons: Hackathon[] = [
       id: "win1",
       title: "The Last Human Connection",
       author: "Sarah Chen",
-      avatar: "/api/placeholder/40/40",
+      avatar:
+        "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=40&h=40&fit=crop&crop=face",
       prize: 4500,
     },
   },
@@ -393,7 +407,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-02-12",
     endDate: "2024-02-27",
     category: "Business & Strategy",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&h=400&fit=crop&crop=center",
     sponsor: "Tesla",
     entryFee: "€5",
     entriesCount: 34,
@@ -409,7 +424,8 @@ export const hackathons: Hackathon[] = [
       id: "win2",
       title: "EcoGrid: Smart Energy Distribution",
       author: "Marcus Johnson",
-      avatar: "/api/placeholder/40/40",
+      avatar:
+        "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=40&h=40&fit=crop&crop=face",
       prize: 10000,
     },
   },
@@ -422,7 +438,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-01-15",
     endDate: "2024-01-30",
     category: "Visual Art",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=400&fit=crop&crop=center",
     sponsor: "Indie Game Studios",
     entryFee: "Free",
     entriesCount: 178,
@@ -438,7 +455,8 @@ export const hackathons: Hackathon[] = [
       id: "win3",
       title: "Neon City Chronicles",
       author: "Alex Rivera",
-      avatar: "/api/placeholder/40/40",
+      avatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=40&h=40&fit=crop&crop=face",
       prize: 3500,
     },
   },
@@ -451,7 +469,8 @@ export const hackathons: Hackathon[] = [
     startDate: "2024-01-20",
     endDate: "2024-02-05",
     category: "Audio & Music",
-    image: "/placeholder.svg?height=400&width=600",
+    image:
+      "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=600&h=400&fit=crop&crop=center",
     sponsor: "ChillHop Music",
     entryFee: "€1",
     entriesCount: 156,
@@ -467,7 +486,8 @@ export const hackathons: Hackathon[] = [
       id: "win4",
       title: "Midnight Study Session",
       author: "Luna Rodriguez",
-      avatar: "/api/placeholder/40/40",
+      avatar:
+        "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=40&h=40&fit=crop&crop=face",
       prize: 4200,
     },
   },
@@ -478,7 +498,8 @@ export const currentUser: User = {
   id: "user1",
   name: "Alex Rivera",
   username: "creativealex",
-  avatar: "/placeholder.svg?height=100&width=100",
+  avatar:
+    "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
   bio: "Digital artist and creative coder exploring the intersection of technology and art.",
   links: {
     instagram: "instagram.com/creativealex",
@@ -493,11 +514,13 @@ export const currentUser: User = {
       summary: "A cyberpunk cityscape with interactive elements",
       content:
         "This piece explores the relationship between humans and technology in a near-future urban environment.",
-      media: "/placeholder.svg?height=400&width=600",
+      media:
+        "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=600&h=400&fit=crop&crop=center",
       category: "Visual Art",
       userId: "user1",
       userName: "Alex Rivera",
-      userAvatar: "/placeholder.svg?height=100&width=100",
+      userAvatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
       hackathonId: "4",
       createdAt: "2025-04-10",
       originalityScore: 92,
@@ -512,11 +535,13 @@ export const currentUser: User = {
         "An ambient audio experience capturing the sounds of an ancient forest",
       content:
         "Recorded and composed using natural sounds and subtle synthesizers to create an immersive forest atmosphere.",
-      media: "/placeholder.svg?height=400&width=600",
+      media:
+        "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop&crop=center",
       category: "Audio",
       userId: "user1",
       userName: "Alex Rivera",
-      userAvatar: "/placeholder.svg?height=100&width=100",
+      userAvatar:
+        "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
       hackathonId: "4",
       createdAt: "2025-04-12",
       originalityScore: 85,
@@ -533,11 +558,13 @@ export const submissionsForVoting: Submission[] = [
     summary: "A series of floating islands with unique ecosystems",
     content:
       "Each island represents a different biome, connected by magical bridges and inhabited by fantastical creatures.",
-    media: "/placeholder.svg?height=400&width=600",
+    media:
+      "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=600&h=400&fit=crop&crop=center",
     category: "Visual Art",
     userId: "user2",
     userName: "Maya Johnson",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
     hackathonId: "3",
     createdAt: "2025-05-15",
     originalityScore: 88,
@@ -549,11 +576,13 @@ export const submissionsForVoting: Submission[] = [
     summary: "A story about the last physical library in a digital world",
     content:
       "In 2150, when all books have been digitized, one librarian maintains the last physical collection of books as an act of rebellion.",
-    media: "/placeholder.svg?height=400&width=600",
+    media:
+      "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=600&h=400&fit=crop&crop=center",
     category: "Writing",
     userId: "user3",
     userName: "Elijah Chen",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     hackathonId: "3",
     createdAt: "2025-05-16",
     originalityScore: 95,
@@ -565,11 +594,13 @@ export const submissionsForVoting: Submission[] = [
     summary: "Music generated from quantum computer data",
     content:
       "This piece translates quantum computing operations into musical notes, creating an otherworldly soundscape.",
-    media: "/placeholder.svg?height=400&width=600",
+    media:
+      "https://images.unsplash.com/photo-1571330735066-03aaa9429d89?w=600&h=400&fit=crop&crop=center",
     category: "Audio",
     userId: "user4",
     userName: "Sophia Patel",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
     hackathonId: "3",
     createdAt: "2025-05-17",
     originalityScore: 91,
@@ -581,11 +612,13 @@ export const submissionsForVoting: Submission[] = [
     summary: "A virtual space where memories are stored as physical objects",
     content:
       "Users can place their memories in this virtual architecture, revisiting them by walking through the space.",
-    media: "/placeholder.svg?height=400&width=600",
+    media:
+      "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&h=400&fit=crop&crop=center",
     category: "Interactive",
     userId: "user5",
     userName: "Marcus Lee",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=face",
     hackathonId: "3",
     createdAt: "2025-05-18",
     originalityScore: 89,
@@ -597,11 +630,13 @@ export const submissionsForVoting: Submission[] = [
     summary: "A digital garden that responds to sound input",
     content:
       "Plants in this digital garden grow, change color, and emit light based on audio input from the user.",
-    media: "/placeholder.svg?height=400&width=600",
+    media:
+      "https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=600&h=400&fit=crop&crop=center",
     category: "Interactive",
     userId: "user6",
     userName: "Olivia Rodriguez",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=face",
     hackathonId: "3",
     createdAt: "2025-05-19",
     originalityScore: 87,
@@ -617,11 +652,13 @@ export const winners: Submission[] = [
     summary: "A cyberpunk cityscape with interactive elements",
     content:
       "This piece explores the relationship between humans and technology in a near-future urban environment.",
-    media: "/placeholder.svg?height=400&width=600",
+    media:
+      "https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=600&h=400&fit=crop&crop=center",
     category: "Visual Art",
     userId: "user1",
     userName: "Alex Rivera",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
     hackathonId: "4",
     createdAt: "2025-04-10",
     originalityScore: 92,
@@ -635,11 +672,13 @@ export const winners: Submission[] = [
     summary: "A short story about time travel and parallel universes",
     content:
       "A physicist discovers a way to send messages to her past self, creating multiple branching timelines.",
-    media: "/placeholder.svg?height=400&width=600",
+    media:
+      "https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=600&h=400&fit=crop&crop=center",
     category: "Writing",
     userId: "user7",
     userName: "James Wilson",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     hackathonId: "4",
     createdAt: "2025-04-08",
     originalityScore: 94,
@@ -653,11 +692,13 @@ export const winners: Submission[] = [
     summary: "A retro-style game where players build their own levels",
     content:
       "This game combines classic platformer mechanics with a powerful level editor that allows players to share creations.",
-    media: "/placeholder.svg?height=400&width=600",
+    media:
+      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=600&h=400&fit=crop&crop=center",
     category: "Game Design",
     userId: "user8",
     userName: "Zoe Taylor",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
     hackathonId: "5",
     createdAt: "2025-03-20",
     originalityScore: 90,
@@ -671,11 +712,13 @@ export const winners: Submission[] = [
     summary: "A concept for vertical gardens integrated into city architecture",
     content:
       "This design reimagines urban spaces with self-sustaining vertical gardens that improve air quality and provide food.",
-    media: "/placeholder.svg?height=400&width=600",
+    media:
+      "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=600&h=400&fit=crop&crop=center",
     category: "Architecture",
     userId: "user9",
     userName: "David Kim",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     hackathonId: "5",
     createdAt: "2025-03-22",
     originalityScore: 89,
@@ -691,7 +734,8 @@ export const messages: Message[] = [
     id: "msg1",
     userId: "user7",
     userName: "James Wilson",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     content:
       "Has anyone experimented with the new AI image generation tools for this hackathon?",
     timestamp: "2025-05-15T14:30:00Z",
@@ -701,7 +745,8 @@ export const messages: Message[] = [
     id: "msg2",
     userId: "user8",
     userName: "Zoe Taylor",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&h=100&fit=crop&crop=face",
     content:
       "Yes! I've been using them to create concept art before finalizing my designs. They're great for quick iterations.",
     timestamp: "2025-05-15T14:35:00Z",
@@ -711,7 +756,8 @@ export const messages: Message[] = [
     id: "msg3",
     userId: "user1",
     userName: "Alex Rivera",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
     content:
       "I'm looking for a collaborator on a mixed media project. Anyone interested in combining visual art with sound design?",
     timestamp: "2025-05-15T15:10:00Z",
@@ -721,7 +767,8 @@ export const messages: Message[] = [
     id: "msg4",
     userId: "user4",
     userName: "Sophia Patel",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
     content:
       "I'd be interested! I specialize in ambient soundscapes. Send me a DM with more details.",
     timestamp: "2025-05-15T15:15:00Z",
@@ -731,7 +778,8 @@ export const messages: Message[] = [
     id: "msg5",
     userId: "user9",
     userName: "David Kim",
-    userAvatar: "/placeholder.svg?height=100&width=100",
+    userAvatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
     content:
       "Just a reminder that submissions are due in 5 days! Make sure to leave time for final polishing.",
     timestamp: "2025-05-15T16:00:00Z",
@@ -747,7 +795,7 @@ export const sponsorChallenges: SponsorChallenge[] = [
     description:
       "Create a concept that addresses climate change through creative technology",
     sponsor: "EcoTech Solutions",
-    logo: "/placeholder.svg?height=100&width=100",
+    logo: "https://images.unsplash.com/photo-1473341304170-971dccb5ac1e?w=100&h=100&fit=crop&crop=center",
     prize: "$1,000 + Mentorship",
     hackathonId: "2",
   },
@@ -757,7 +805,7 @@ export const sponsorChallenges: SponsorChallenge[] = [
     description:
       "Develop a narrative experience that pushes the boundaries of immersive storytelling",
     sponsor: "Narrative Labs",
-    logo: "/placeholder.svg?height=100&width=100",
+    logo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=center",
     prize: "VR Equipment + Studio Tour",
     hackathonId: "3",
   },
@@ -767,7 +815,7 @@ export const sponsorChallenges: SponsorChallenge[] = [
     description:
       "Design an experience that is inclusive and accessible to users with diverse abilities",
     sponsor: "Universal Design Co",
-    logo: "/placeholder.svg?height=100&width=100",
+    logo: "https://images.unsplash.com/photo-1559136555-9303baea8ebd?w=100&h=100&fit=crop&crop=center",
     prize: "$1,500 + Portfolio Feature",
     hackathonId: "1",
   },
