@@ -4,10 +4,7 @@
  * OpenAPI definition
  * OpenAPI spec version: v0
  */
-import {
-  useMutation,
-  useQuery
-} from '@tanstack/react-query';
+import { useMutation, useQuery } from "@tanstack/react-query";
 import type {
   DataTag,
   DefinedInitialDataOptions,
@@ -20,269 +17,388 @@ import type {
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
-  UseQueryResult
-} from '@tanstack/react-query';
+  UseQueryResult,
+} from "@tanstack/react-query";
 
-import axios from 'axios';
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
+import axios from "axios";
+import type { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 
 import type {
   GetMyTeamRequest,
   TeamCreateRequest,
   TeamMemberInviteRequest,
   TeamMemberRemoveRequest,
-  TeamMemberResponse
-} from '.././schemas';
-
-
-
-
+  TeamMemberResponse,
+} from ".././schemas";
 
 export const createTeam = (
-    teamCreateRequest: TeamCreateRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
-    
-    
-    return axios.post(
-      `https://api.hackathon-fiipractic.octavianregatun.com/teams`,
-      teamCreateRequest,options
-    );
+  teamCreateRequest: TeamCreateRequest,
+  options?: AxiosRequestConfig
+): Promise<AxiosResponse<void>> => {
+  return axios.post(
+    `https://api.hackathon-fiipractic.octavianregatun.com/teams`,
+    teamCreateRequest,
+    options
+  );
+};
+
+export const getCreateTeamMutationOptions = <
+  TError = AxiosError<unknown>,
+  TContext = unknown
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof createTeam>>,
+    TError,
+    { data: TeamCreateRequest },
+    TContext
+  >;
+  axios?: AxiosRequestConfig;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof createTeam>>,
+  TError,
+  { data: TeamCreateRequest },
+  TContext
+> => {
+  const mutationKey = ["createTeam"];
+  const { mutation: mutationOptions, axios: axiosOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, axios: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof createTeam>>,
+    { data: TeamCreateRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return createTeam(data, axiosOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type CreateTeamMutationResult = NonNullable<
+  Awaited<ReturnType<typeof createTeam>>
+>;
+export type CreateTeamMutationBody = TeamCreateRequest;
+export type CreateTeamMutationError = AxiosError<unknown>;
+
+export const useCreateTeam = <TError = AxiosError<unknown>, TContext = unknown>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof createTeam>>,
+      TError,
+      { data: TeamCreateRequest },
+      TContext
+    >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof createTeam>>,
+  TError,
+  { data: TeamCreateRequest },
+  TContext
+> => {
+  const mutationOptions = getCreateTeamMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+export const inviteTeamMember = (
+  teamMemberInviteRequest: TeamMemberInviteRequest,
+  options?: AxiosRequestConfig
+): Promise<AxiosResponse<void>> => {
+  return axios.post(
+    `https://api.hackathon-fiipractic.octavianregatun.com/teams/members`,
+    teamMemberInviteRequest,
+    options
+  );
+};
+
+export const getInviteTeamMemberMutationOptions = <
+  TError = AxiosError<unknown>,
+  TContext = unknown
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof inviteTeamMember>>,
+    TError,
+    { data: TeamMemberInviteRequest },
+    TContext
+  >;
+  axios?: AxiosRequestConfig;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof inviteTeamMember>>,
+  TError,
+  { data: TeamMemberInviteRequest },
+  TContext
+> => {
+  const mutationKey = ["inviteTeamMember"];
+  const { mutation: mutationOptions, axios: axiosOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, axios: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof inviteTeamMember>>,
+    { data: TeamMemberInviteRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return inviteTeamMember(data, axiosOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type InviteTeamMemberMutationResult = NonNullable<
+  Awaited<ReturnType<typeof inviteTeamMember>>
+>;
+export type InviteTeamMemberMutationBody = TeamMemberInviteRequest;
+export type InviteTeamMemberMutationError = AxiosError<unknown>;
+
+export const useInviteTeamMember = <
+  TError = AxiosError<unknown>,
+  TContext = unknown
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof inviteTeamMember>>,
+      TError,
+      { data: TeamMemberInviteRequest },
+      TContext
+    >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof inviteTeamMember>>,
+  TError,
+  { data: TeamMemberInviteRequest },
+  TContext
+> => {
+  const mutationOptions = getInviteTeamMemberMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+export const removeTeamMember = (
+  teamMemberRemoveRequest: TeamMemberRemoveRequest,
+  options?: AxiosRequestConfig
+): Promise<AxiosResponse<void>> => {
+  return axios.delete(
+    `https://api.hackathon-fiipractic.octavianregatun.com/teams/members`,
+    { data: teamMemberRemoveRequest, ...options }
+  );
+};
+
+export const getRemoveTeamMemberMutationOptions = <
+  TError = AxiosError<unknown>,
+  TContext = unknown
+>(options?: {
+  mutation?: UseMutationOptions<
+    Awaited<ReturnType<typeof removeTeamMember>>,
+    TError,
+    { data: TeamMemberRemoveRequest },
+    TContext
+  >;
+  axios?: AxiosRequestConfig;
+}): UseMutationOptions<
+  Awaited<ReturnType<typeof removeTeamMember>>,
+  TError,
+  { data: TeamMemberRemoveRequest },
+  TContext
+> => {
+  const mutationKey = ["removeTeamMember"];
+  const { mutation: mutationOptions, axios: axiosOptions } = options
+    ? options.mutation &&
+      "mutationKey" in options.mutation &&
+      options.mutation.mutationKey
+      ? options
+      : { ...options, mutation: { ...options.mutation, mutationKey } }
+    : { mutation: { mutationKey }, axios: undefined };
+
+  const mutationFn: MutationFunction<
+    Awaited<ReturnType<typeof removeTeamMember>>,
+    { data: TeamMemberRemoveRequest }
+  > = (props) => {
+    const { data } = props ?? {};
+
+    return removeTeamMember(data, axiosOptions);
+  };
+
+  return { mutationFn, ...mutationOptions };
+};
+
+export type RemoveTeamMemberMutationResult = NonNullable<
+  Awaited<ReturnType<typeof removeTeamMember>>
+>;
+export type RemoveTeamMemberMutationBody = TeamMemberRemoveRequest;
+export type RemoveTeamMemberMutationError = AxiosError<unknown>;
+
+export const useRemoveTeamMember = <
+  TError = AxiosError<unknown>,
+  TContext = unknown
+>(
+  options?: {
+    mutation?: UseMutationOptions<
+      Awaited<ReturnType<typeof removeTeamMember>>,
+      TError,
+      { data: TeamMemberRemoveRequest },
+      TContext
+    >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient
+): UseMutationResult<
+  Awaited<ReturnType<typeof removeTeamMember>>,
+  TError,
+  { data: TeamMemberRemoveRequest },
+  TContext
+> => {
+  const mutationOptions = getRemoveTeamMemberMutationOptions(options);
+
+  return useMutation(mutationOptions, queryClient);
+};
+export const getMyTeam = (
+  getMyTeamRequest: GetMyTeamRequest,
+  options?: AxiosRequestConfig
+): Promise<AxiosResponse<TeamMemberResponse[]>> => {
+  return axios.get(
+    `https://api.hackathon-fiipractic.octavianregatun.com/teams/my-team`,
+    options
+  );
+};
+
+export const getGetMyTeamQueryKey = (getMyTeamRequest: GetMyTeamRequest) => {
+  return [
+    `https://api.hackathon-fiipractic.octavianregatun.com/teams/my-team`,
+    getMyTeamRequest,
+  ] as const;
+};
+
+export const getGetMyTeamQueryOptions = <
+  TData = Awaited<ReturnType<typeof getMyTeam>>,
+  TError = AxiosError<unknown>
+>(
+  getMyTeamRequest: GetMyTeamRequest,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData>
+    >;
+    axios?: AxiosRequestConfig;
   }
-
-
-
-export const getCreateTeamMutationOptions = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createTeam>>, TError,{data: TeamCreateRequest}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof createTeam>>, TError,{data: TeamCreateRequest}, TContext> => {
-
-const mutationKey = ['createTeam'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof createTeam>>, {data: TeamCreateRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  createTeam(data,axiosOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type CreateTeamMutationResult = NonNullable<Awaited<ReturnType<typeof createTeam>>>
-    export type CreateTeamMutationBody = TeamCreateRequest
-    export type CreateTeamMutationError = AxiosError<unknown>
-
-    export const useCreateTeam = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof createTeam>>, TError,{data: TeamCreateRequest}, TContext>, axios?: AxiosRequestConfig}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof createTeam>>,
-        TError,
-        {data: TeamCreateRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getCreateTeamMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    export const inviteTeamMember = (
-    teamMemberInviteRequest: TeamMemberInviteRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
-    
-    
-    return axios.post(
-      `https://api.hackathon-fiipractic.octavianregatun.com/teams/members`,
-      teamMemberInviteRequest,options
-    );
-  }
-
-
-
-export const getInviteTeamMemberMutationOptions = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof inviteTeamMember>>, TError,{data: TeamMemberInviteRequest}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof inviteTeamMember>>, TError,{data: TeamMemberInviteRequest}, TContext> => {
-
-const mutationKey = ['inviteTeamMember'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof inviteTeamMember>>, {data: TeamMemberInviteRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  inviteTeamMember(data,axiosOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type InviteTeamMemberMutationResult = NonNullable<Awaited<ReturnType<typeof inviteTeamMember>>>
-    export type InviteTeamMemberMutationBody = TeamMemberInviteRequest
-    export type InviteTeamMemberMutationError = AxiosError<unknown>
-
-    export const useInviteTeamMember = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof inviteTeamMember>>, TError,{data: TeamMemberInviteRequest}, TContext>, axios?: AxiosRequestConfig}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof inviteTeamMember>>,
-        TError,
-        {data: TeamMemberInviteRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getInviteTeamMemberMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    export const removeTeamMember = (
-    teamMemberRemoveRequest: TeamMemberRemoveRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
-    
-    
-    return axios.delete(
-      `https://api.hackathon-fiipractic.octavianregatun.com/teams/members`,{data:
-      teamMemberRemoveRequest, ...options}
-    );
-  }
-
-
-
-export const getRemoveTeamMemberMutationOptions = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeTeamMember>>, TError,{data: TeamMemberRemoveRequest}, TContext>, axios?: AxiosRequestConfig}
-): UseMutationOptions<Awaited<ReturnType<typeof removeTeamMember>>, TError,{data: TeamMemberRemoveRequest}, TContext> => {
-
-const mutationKey = ['removeTeamMember'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
-      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
-      options
-      : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
-
-      
-
-
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof removeTeamMember>>, {data: TeamMemberRemoveRequest}> = (props) => {
-          const {data} = props ?? {};
-
-          return  removeTeamMember(data,axiosOptions)
-        }
-
-        
-
-
-  return  { mutationFn, ...mutationOptions }}
-
-    export type RemoveTeamMemberMutationResult = NonNullable<Awaited<ReturnType<typeof removeTeamMember>>>
-    export type RemoveTeamMemberMutationBody = TeamMemberRemoveRequest
-    export type RemoveTeamMemberMutationError = AxiosError<unknown>
-
-    export const useRemoveTeamMember = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof removeTeamMember>>, TError,{data: TeamMemberRemoveRequest}, TContext>, axios?: AxiosRequestConfig}
- , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof removeTeamMember>>,
-        TError,
-        {data: TeamMemberRemoveRequest},
-        TContext
-      > => {
-
-      const mutationOptions = getRemoveTeamMemberMutationOptions(options);
-
-      return useMutation(mutationOptions , queryClient);
-    }
-    export const getMyTeam = (
-    getMyTeamRequest: GetMyTeamRequest, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<TeamMemberResponse[]>> => {
-    
-    
-    return axios.get(
-      `https://api.hackathon-fiipractic.octavianregatun.com/teams/my-team`,options
-    );
-  }
-
-
-export const getGetMyTeamQueryKey = (getMyTeamRequest: GetMyTeamRequest,) => {
-    return [`https://api.hackathon-fiipractic.octavianregatun.com/teams/my-team`, getMyTeamRequest] as const;
-    }
-
-    
-export const getGetMyTeamQueryOptions = <TData = Awaited<ReturnType<typeof getMyTeam>>, TError = AxiosError<unknown>>(getMyTeamRequest: GetMyTeamRequest, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData>>, axios?: AxiosRequestConfig}
 ) => {
+  const { query: queryOptions, axios: axiosOptions } = options ?? {};
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+  const queryKey =
+    queryOptions?.queryKey ?? getGetMyTeamQueryKey(getMyTeamRequest);
 
-  const queryKey =  queryOptions?.queryKey ?? getGetMyTeamQueryKey(getMyTeamRequest);
+  const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyTeam>>> = ({
+    signal,
+  }) => getMyTeam(getMyTeamRequest, { signal, ...axiosOptions });
 
-  
+  return { queryKey, queryFn, ...queryOptions } as UseQueryOptions<
+    Awaited<ReturnType<typeof getMyTeam>>,
+    TError,
+    TData
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
+};
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getMyTeam>>> = ({ signal }) => getMyTeam(getMyTeamRequest, { signal, ...axiosOptions });
+export type GetMyTeamQueryResult = NonNullable<
+  Awaited<ReturnType<typeof getMyTeam>>
+>;
+export type GetMyTeamQueryError = AxiosError<unknown>;
 
-      
-
-      
-
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
-}
-
-export type GetMyTeamQueryResult = NonNullable<Awaited<ReturnType<typeof getMyTeam>>>
-export type GetMyTeamQueryError = AxiosError<unknown>
-
-
-export function useGetMyTeam<TData = Awaited<ReturnType<typeof getMyTeam>>, TError = AxiosError<unknown>>(
- getMyTeamRequest: GetMyTeamRequest, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData>> & Pick<
+export function useGetMyTeam<
+  TData = Awaited<ReturnType<typeof getMyTeam>>,
+  TError = AxiosError<unknown>
+>(
+  getMyTeamRequest: GetMyTeamRequest,
+  options: {
+    query: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData>
+    > &
+      Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMyTeam>>,
           TError,
           Awaited<ReturnType<typeof getMyTeam>>
-        > , 'initialData'
-      >, axios?: AxiosRequestConfig}
- , queryClient?: QueryClient
-  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMyTeam<TData = Awaited<ReturnType<typeof getMyTeam>>, TError = AxiosError<unknown>>(
- getMyTeamRequest: GetMyTeamRequest, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData>> & Pick<
+        >,
+        "initialData"
+      >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient
+): DefinedUseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetMyTeam<
+  TData = Awaited<ReturnType<typeof getMyTeam>>,
+  TError = AxiosError<unknown>
+>(
+  getMyTeamRequest: GetMyTeamRequest,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData>
+    > &
+      Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getMyTeam>>,
           TError,
           Awaited<ReturnType<typeof getMyTeam>>
-        > , 'initialData'
-      >, axios?: AxiosRequestConfig}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetMyTeam<TData = Awaited<ReturnType<typeof getMyTeam>>, TError = AxiosError<unknown>>(
- getMyTeamRequest: GetMyTeamRequest, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData>>, axios?: AxiosRequestConfig}
- , queryClient?: QueryClient
-  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+        >,
+        "initialData"
+      >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
+export function useGetMyTeam<
+  TData = Awaited<ReturnType<typeof getMyTeam>>,
+  TError = AxiosError<unknown>
+>(
+  getMyTeamRequest: GetMyTeamRequest,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData>
+    >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+};
 
-export function useGetMyTeam<TData = Awaited<ReturnType<typeof getMyTeam>>, TError = AxiosError<unknown>>(
- getMyTeamRequest: GetMyTeamRequest, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData>>, axios?: AxiosRequestConfig}
- , queryClient?: QueryClient 
- ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
+export function useGetMyTeam<
+  TData = Awaited<ReturnType<typeof getMyTeam>>,
+  TError = AxiosError<unknown>
+>(
+  getMyTeamRequest: GetMyTeamRequest,
+  options?: {
+    query?: Partial<
+      UseQueryOptions<Awaited<ReturnType<typeof getMyTeam>>, TError, TData>
+    >;
+    axios?: AxiosRequestConfig;
+  },
+  queryClient?: QueryClient
+): UseQueryResult<TData, TError> & {
+  queryKey: DataTag<QueryKey, TData, TError>;
+} {
+  const queryOptions = getGetMyTeamQueryOptions(getMyTeamRequest, options);
 
-  const queryOptions = getGetMyTeamQueryOptions(getMyTeamRequest,options)
+  const query = useQuery(queryOptions, queryClient) as UseQueryResult<
+    TData,
+    TError
+  > & { queryKey: DataTag<QueryKey, TData, TError> };
 
-  const query = useQuery(queryOptions , queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
-
-  query.queryKey = queryOptions.queryKey ;
+  query.queryKey = queryOptions.queryKey;
 
   return query;
 }
-
-
-

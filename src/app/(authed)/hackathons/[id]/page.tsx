@@ -1,934 +1,649 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { useParams, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardHeader,
   CardTitle,
+  CardDescription,
 } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Separator } from "@/components/ui/separator";
 import { GridBackground } from "@/components/ui/grid-background";
+import { Separator } from "@/components/ui/separator";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Calendar,
-  Trophy,
-  Heart,
-  Share2,
-  Eye,
-  MessageCircle,
-  Award,
-  Target,
-  Zap,
-  CheckCircle,
-  Vote,
-  Volume2,
+  Clock,
   Users,
-  Settings,
-  Upload,
+  Trophy,
+  ArrowLeft,
+  Loader2,
+  Plus,
+  Vote,
+  Target,
+  Lightbulb,
+  Palette,
+  Music,
+  PenTool,
+  Briefcase,
+  CheckCircle,
   AlertCircle,
+  PlayCircle,
 } from "lucide-react";
 import Link from "next/link";
-import { getHackathonType, getVotingRoute } from "@/lib/hackathon-types";
-import { hackathons } from "@/lib/mock-data";
+import { useGetById } from "@/generated-api/hackathon-controller/hackathon-controller";
+import { useGetUserMe } from "@/generated-api/user-controller/user-controller";
+import { useGetMyTeam } from "@/generated-api/team-controller/team-controller";
+import {
+  HackathonResponseHackathonState,
+  HackathonResponseType,
+  UserDto,
+  GetMyTeamRequest,
+} from "@/generated-api/schemas";
 
-// Mock submissions data
-const submissions = [
-  {
-    id: "1",
-    title: "Neon Dreams",
-    author: "Alex Chen",
-    avatar: "/api/placeholder/40/40",
-    image: "/api/placeholder/300/200",
-    likes: 45,
-    views: 234,
-    comments: 12,
-    submittedAt: "2024-02-10T14:30:00",
-    description:
-      "A cyberpunk-inspired digital painting exploring the intersection of technology and dreams.",
-  },
-  {
-    id: "2",
-    title: "Nature's Algorithm",
-    author: "Sarah Kim",
-    avatar: "/api/placeholder/40/40",
-    image: "/api/placeholder/300/200",
-    likes: 67,
-    views: 456,
-    comments: 23,
-    submittedAt: "2024-02-09T09:15:00",
-    description:
-      "AI-generated artwork that mimics natural patterns and organic growth.",
-  },
-  {
-    id: "3",
-    title: "Urban Metamorphosis",
-    author: "Marcus Johnson",
-    avatar: "/api/placeholder/40/40",
-    image: "/api/placeholder/300/200",
-    likes: 32,
-    views: 189,
-    comments: 8,
-    submittedAt: "2024-02-08T16:45:00",
-    description: "3D visualization of how cities might evolve in the future.",
-  },
-  {
-    id: "4",
-    title: "Emotional Spectrum",
-    author: "Luna Rodriguez",
-    avatar: "/api/placeholder/40/40",
-    image: "/api/placeholder/300/200",
-    likes: 89,
-    views: 567,
-    comments: 34,
-    submittedAt: "2024-02-07T11:20:00",
-    description:
-      "Abstract representation of human emotions through color and form.",
-  },
-];
+export default function HackathonDetailPage() {
+  const params = useParams();
+  const searchParams = useSearchParams();
+  const hackathonId = parseInt(params.id as string);
+  const initialTab = searchParams.get("tab") || "overview";
 
-const getTimeRemaining = (deadline: string) => {
-  const now = new Date().getTime();
-  const end = new Date(deadline).getTime();
-  const diff = end - now;
+  // State management
+  const [activeTab, setActiveTab] = useState(initialTab);
 
-  if (diff <= 0) return "Ended";
+  // API hooks
+  const { data: hackathonResponse, isLoading, error } = useGetById(hackathonId);
+  const { data: userResponse } = useGetUserMe();
+  const hackathon = hackathonResponse?.data;
+  const user = userResponse?.data as UserDto & { id?: number };
 
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+  // Team management hooks
 
-  return `${days}d ${hours}h remaining`;
-};
+  // Get user's team for this hackathon (only if user is loaded)
+  const { data: myTeamResponse } = useGetMyTeam(
+    { userId: user?.id || 0, hackathonId } as GetMyTeamRequest,
+    {
+      query: {
+        enabled: !!user?.id && !!hackathonId,
+      },
+    }
+  );
+  const myTeam = myTeamResponse?.data || [];
 
-interface HackathonDetailPageProps {
-  params: {
-    id: string;
+  // Update tab when URL changes
+  useEffect(() => {
+    setActiveTab(initialTab);
+  }, [initialTab]);
+
+  // Utility functions
+  const getStatusColor = (status: HackathonResponseHackathonState) => {
+    switch (status) {
+      case HackathonResponseHackathonState.Pending:
+        return "bg-blue-100 text-blue-800 border-blue-200";
+      case HackathonResponseHackathonState.Ongoing:
+        return "bg-green-100 text-green-800 border-green-200";
+      case HackathonResponseHackathonState.Ended:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+      default:
+        return "bg-gray-100 text-gray-800 border-gray-200";
+    }
   };
-}
 
-export default function HackathonDetailPage({
-  params,
-}: HackathonDetailPageProps) {
-  // Find the hackathon by ID
-  const hackathon = hackathons.find((h) => h.id === params.id);
+  const getTypeIcon = (type: HackathonResponseType) => {
+    switch (type) {
+      case HackathonResponseType.ART:
+        return <Palette className="h-5 w-5" />;
+      case HackathonResponseType.WRITING:
+        return <PenTool className="h-5 w-5" />;
+      case HackathonResponseType.AUDIO:
+        return <Music className="h-5 w-5" />;
+      case HackathonResponseType.BUSINESS:
+        return <Briefcase className="h-5 w-5" />;
+      default:
+        return <Lightbulb className="h-5 w-5" />;
+    }
+  };
 
-  // If hackathon not found, show error
-  if (!hackathon) {
+  const getStatusIcon = (status: HackathonResponseHackathonState) => {
+    switch (status) {
+      case HackathonResponseHackathonState.Pending:
+        return <Clock className="h-4 w-4" />;
+      case HackathonResponseHackathonState.Ongoing:
+        return <PlayCircle className="h-4 w-4" />;
+      case HackathonResponseHackathonState.Ended:
+        return <CheckCircle className="h-4 w-4" />;
+      default:
+        return <AlertCircle className="h-4 w-4" />;
+    }
+  };
+
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return "";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      weekday: "long",
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
+
+  const getTimeRemaining = (endDate: string | undefined) => {
+    if (!endDate) return "";
+    const now = new Date();
+    const end = new Date(endDate);
+    const diff = end.getTime() - now.getTime();
+
+    if (diff <= 0) return "Ended";
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+
+    if (days > 0) return `${days} days, ${hours} hours remaining`;
+    return `${hours} hours remaining`;
+  };
+
+  const canParticipate = (status: HackathonResponseHackathonState) => {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
+      status === HackathonResponseHackathonState.Pending ||
+      status === HackathonResponseHackathonState.Ongoing
+    );
+  };
+
+  const canVote = (status: HackathonResponseHackathonState) => {
+    return (
+      status === HackathonResponseHackathonState.Ongoing ||
+      status === HackathonResponseHackathonState.Ended
+    );
+  };
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-ivory flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-foreground mb-2">
+          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4 text-charcoal-600" />
+          <p className="text-charcoal-600">Loading hackathon details...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !hackathon) {
+    return (
+      <div className="min-h-screen bg-ivory flex items-center justify-center">
+        <div className="text-center">
+          <AlertCircle className="h-12 w-12 mx-auto mb-4 text-red-500" />
+          <h2 className="text-xl font-semibold text-charcoal-900 mb-2">
             Hackathon Not Found
-          </h1>
-          <p className="text-muted-foreground mb-4">
-            The hackathon you&apos;re looking for doesn&apos;t exist.
+          </h2>
+          <p className="text-charcoal-600 mb-4">
+            The hackathon you&apos;re looking for doesn&apos;t exist or has been
+            removed.
           </p>
           <Button asChild>
-            <Link href="/hackathons">Back to Hackathons</Link>
+            <Link href="/hackathons">
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Hackathons
+            </Link>
           </Button>
         </div>
       </div>
     );
   }
 
-  // Mock user team status - in real app, this would come from API/context
-  const userTeam = {
-    isJoined: hackathon.status !== "pending", // Only joined if not pending
-    teamId: "team-123",
-    teamName: "Creative Minds",
-    isLeader: true,
-    members: [
-      { id: "1", name: "You", email: "you@example.com", isLeader: true },
-      { id: "2", name: "John Doe", email: "john@example.com", isLeader: false },
-    ],
-  };
-
-  const timeRemaining = getTimeRemaining(
-    hackathon.deadline || hackathon.endDate
-  );
-
-  // Get hackathon type configuration
-  const hackathonType = getHackathonType(hackathon.category);
-  const votingRoute = getVotingRoute(hackathon.category);
-
-  // Get voting button configuration based on category
-  const getVotingButtonConfig = () => {
-    if (!hackathonType)
-      return { label: "View & Vote", icon: Vote, route: "/voting" };
-
-    switch (hackathonType.id) {
-      case "audio":
-        return { label: "Listen & Vote", icon: Volume2, route: votingRoute };
-      case "art":
-        return { label: "View & Vote", icon: Vote, route: votingRoute };
-      case "writing":
-        return { label: "Read & Vote", icon: Vote, route: votingRoute };
-      case "business":
-        return { label: "Review & Vote", icon: Vote, route: votingRoute };
-      default:
-        return { label: "View & Vote", icon: Vote, route: votingRoute };
-    }
-  };
-
-  const votingConfig = getVotingButtonConfig();
-
-  // Mock data for rules, judging, and prizes based on hackathon type
-  const getHackathonDetails = () => {
-    const baseDetails = {
-      organizer: {
-        name: hackathon.sponsor || "IdeaSweep",
-        avatar: "/api/placeholder/40/40",
-        verified: true,
-      },
-    };
-
-    switch (hackathonType?.id) {
-      case "art":
-        return {
-          ...baseDetails,
-          rules: [
-            "Original artwork only - no plagiarism",
-            "Must be created during the hackathon period",
-            "Maximum 3 submissions per participant",
-            "All digital mediums welcome (painting, 3D, AI-assisted, etc.)",
-            "Include a brief description of your creative process",
-          ],
-          judging: [
-            "Creativity and Originality (40%)",
-            "Technical Execution (30%)",
-            "Visual Impact (20%)",
-            "Theme Adherence (10%)",
-          ],
-          prizes: [
-            {
-              place: "1st",
-              amount: Math.floor((hackathon.prize || 5000) * 0.5),
-              description: "Winner + Featured Gallery",
-            },
-            {
-              place: "2nd",
-              amount: Math.floor((hackathon.prize || 5000) * 0.3),
-              description: "Runner-up + Portfolio Review",
-            },
-            {
-              place: "3rd",
-              amount: Math.floor((hackathon.prize || 5000) * 0.2),
-              description: "Third Place + Mentorship Session",
-            },
-          ],
-        };
-      case "writing":
-        return {
-          ...baseDetails,
-          rules: [
-            "Original content only - no plagiarism",
-            "Word limit: 500-2000 words",
-            "Maximum 2 submissions per participant",
-            "All genres welcome",
-            "Must include title and brief synopsis",
-          ],
-          judging: [
-            "Storytelling and Plot (35%)",
-            "Writing Quality and Style (30%)",
-            "Character Development (20%)",
-            "Theme Adherence (15%)",
-          ],
-          prizes: [
-            {
-              place: "1st",
-              amount: Math.floor((hackathon.prize || 3000) * 0.5),
-              description: "Winner + Publishing Opportunity",
-            },
-            {
-              place: "2nd",
-              amount: Math.floor((hackathon.prize || 3000) * 0.3),
-              description: "Runner-up + Editorial Review",
-            },
-            {
-              place: "3rd",
-              amount: Math.floor((hackathon.prize || 3000) * 0.2),
-              description: "Third Place + Writing Workshop",
-            },
-          ],
-        };
-      case "audio":
-        return {
-          ...baseDetails,
-          rules: [
-            "Original compositions only",
-            "Duration: 1-5 minutes",
-            "Maximum 2 tracks per participant",
-            "Any genre or style welcome",
-            "Include track description and inspiration",
-          ],
-          judging: [
-            "Composition and Creativity (40%)",
-            "Production Quality (30%)",
-            "Originality (20%)",
-            "Theme Interpretation (10%)",
-          ],
-          prizes: [
-            {
-              place: "1st",
-              amount: Math.floor((hackathon.prize || 4000) * 0.5),
-              description: "Winner + Studio Session",
-            },
-            {
-              place: "2nd",
-              amount: Math.floor((hackathon.prize || 4000) * 0.3),
-              description: "Runner-up + Equipment Prize",
-            },
-            {
-              place: "3rd",
-              amount: Math.floor((hackathon.prize || 4000) * 0.2),
-              description: "Third Place + Mentorship",
-            },
-          ],
-        };
-      case "business":
-        return {
-          ...baseDetails,
-          rules: [
-            "Original business concept required",
-            "Complete business plan submission",
-            "Maximum 10-page presentation",
-            "Financial projections required",
-            "Market research and validation",
-          ],
-          judging: [
-            "Market Potential and Feasibility (35%)",
-            "Innovation and Uniqueness (25%)",
-            "Business Model Viability (25%)",
-            "Presentation Quality (15%)",
-          ],
-          prizes: [
-            {
-              place: "1st",
-              amount: Math.floor((hackathon.prize || 10000) * 0.5),
-              description: "Winner + Investor Pitch Session",
-            },
-            {
-              place: "2nd",
-              amount: Math.floor((hackathon.prize || 10000) * 0.3),
-              description: "Runner-up + Business Mentorship",
-            },
-            {
-              place: "3rd",
-              amount: Math.floor((hackathon.prize || 10000) * 0.2),
-              description: "Third Place + Accelerator Access",
-            },
-          ],
-        };
-      default:
-        return {
-          ...baseDetails,
-          rules: [
-            "Original work only",
-            "Follow submission guidelines",
-            "Respect deadline",
-            "Be creative and innovative",
-          ],
-          judging: [
-            "Creativity (40%)",
-            "Technical Quality (30%)",
-            "Innovation (20%)",
-            "Theme Adherence (10%)",
-          ],
-          prizes: [
-            {
-              place: "1st",
-              amount: Math.floor((hackathon.prize || 5000) * 0.5),
-              description: "Winner",
-            },
-            {
-              place: "2nd",
-              amount: Math.floor((hackathon.prize || 5000) * 0.3),
-              description: "Runner-up",
-            },
-            {
-              place: "3rd",
-              amount: Math.floor((hackathon.prize || 5000) * 0.2),
-              description: "Third Place",
-            },
-          ],
-        };
-    }
-  };
-
-  const hackathonDetails = getHackathonDetails();
-
   return (
-    <div className="min-h-screen bg-background">
-      {/* Hero Section */}
-      <GridBackground className="py-12" opacity={0.05}>
+    <div className="min-h-screen bg-ivory">
+      {/* Header */}
+      <GridBackground className="py-8" opacity={0.05}>
         <div className="container mx-auto px-4">
-          <div className="grid lg:grid-cols-3 gap-8">
-            {/* Main Content */}
-            <div className="lg:col-span-2 space-y-6">
-              {/* Header */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <Badge className="bg-green-100 text-green-800 border-green-200">
-                    {hackathon.status.charAt(0).toUpperCase() +
-                      hackathon.status.slice(1)}
-                  </Badge>
-                  <Badge variant="outline">{hackathon.category}</Badge>
-                  <Badge variant="outline">{hackathon.difficulty}</Badge>
-                  {hackathonType && (
-                    <Badge variant="outline" className="text-xs">
-                      {hackathonType.votingType} voting
-                    </Badge>
-                  )}
+          {/* Navigation */}
+          <div className="mb-6">
+            <Button
+              variant="ghost"
+              asChild
+              className="text-charcoal-600 hover:text-charcoal-900"
+            >
+              <Link href="/hackathons">
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Hackathons
+              </Link>
+            </Button>
+          </div>
+
+          {/* Hackathon Header */}
+          <div className="flex flex-col lg:flex-row gap-8 items-start">
+            <div className="flex-1">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="p-3 bg-charcoal-100 rounded-lg">
+                  {getTypeIcon(hackathon.type!)}
                 </div>
-
-                <h1 className="text-4xl font-bold text-foreground">
-                  {hackathon.title}
-                </h1>
-
-                <p className="text-lg text-muted-foreground leading-relaxed">
-                  {hackathon.description}
-                </p>
-
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <Avatar className="w-8 h-8">
-                      <AvatarImage src={hackathonDetails.organizer.avatar} />
-                      <AvatarFallback>CL</AvatarFallback>
-                    </Avatar>
-                    <span className="text-sm text-muted-foreground">
-                      by {hackathonDetails.organizer.name}
-                    </span>
-                    {hackathonDetails.organizer.verified && (
-                      <CheckCircle className="w-4 h-4 text-blue-500" />
-                    )}
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <Button variant="ghost" size="sm">
-                      <Heart className="w-4 h-4 mr-2" />
-                      Save
-                    </Button>
-                    <Button variant="ghost" size="sm">
-                      <Share2 className="w-4 h-4 mr-2" />
-                      Share
-                    </Button>
-                  </div>
+                <div>
+                  <Badge
+                    className={`${getStatusColor(
+                      hackathon.hackathonState!
+                    )} mb-2`}
+                  >
+                    {getStatusIcon(hackathon.hackathonState!)}
+                    <span className="ml-1">{hackathon.hackathonState}</span>
+                  </Badge>
+                  <h1 className="text-3xl font-bold text-charcoal-900">
+                    {hackathon.name}
+                  </h1>
                 </div>
               </div>
 
-              {/* Tabs */}
-              <Tabs defaultValue="overview" className="w-full">
-                <TabsList className="grid w-full grid-cols-3">
-                  <TabsTrigger value="overview">Overview</TabsTrigger>
-                  <TabsTrigger value="submissions">
-                    Submissions ({hackathon.submissions})
-                  </TabsTrigger>
-                  <TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
-                </TabsList>
+              <p className="text-lg text-charcoal-600 mb-6 leading-relaxed">
+                {hackathon.description}
+              </p>
 
-                <TabsContent value="overview" className="space-y-6">
-                  {/* Rules */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Target className="w-5 h-5" />
-                        Rules & Guidelines
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="space-y-2">
-                        {hackathonDetails.rules.map((rule, index) => (
-                          <li key={index} className="flex items-start gap-2">
-                            <CheckCircle className="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" />
-                            <span className="text-sm text-muted-foreground">
-                              {rule}
-                            </span>
-                          </li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
+              {/* Key Information */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+                <Card className="border-charcoal-200 bg-ivory/90">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Calendar className="h-4 w-4 text-charcoal-600" />
+                      <span className="text-sm font-medium text-charcoal-700">
+                        Start Date
+                      </span>
+                    </div>
+                    <p className="text-sm text-charcoal-900">
+                      {formatDate(hackathon.startedAt)}
+                    </p>
+                  </CardContent>
+                </Card>
 
-                  {/* Judging Criteria */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Award className="w-5 h-5" />
-                        Judging Criteria
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-3">
-                        {hackathonDetails.judging.map((criteria, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between"
-                          >
-                            <span className="text-sm text-muted-foreground">
-                              {criteria}
-                            </span>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
+                <Card className="border-charcoal-200 bg-ivory/90">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Clock className="h-4 w-4 text-charcoal-600" />
+                      <span className="text-sm font-medium text-charcoal-700">
+                        End Date
+                      </span>
+                    </div>
+                    <p className="text-sm text-charcoal-900">
+                      {formatDate(hackathon.endedAt)}
+                    </p>
+                  </CardContent>
+                </Card>
 
-                  {/* Prizes */}
-                  <Card>
-                    <CardHeader>
-                      <CardTitle className="flex items-center gap-2">
-                        <Trophy className="w-5 h-5" />
-                        Prizes & Rewards
-                      </CardTitle>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {hackathonDetails.prizes.map((prize, index) => (
-                          <div
-                            key={index}
-                            className="flex items-center justify-between p-3 bg-accent rounded-lg"
-                          >
-                            <div>
-                              <div className="font-medium">
-                                {prize.place} Place
-                              </div>
-                              <div className="text-sm text-muted-foreground">
-                                {prize.description}
-                              </div>
-                            </div>
-                            <div className="text-lg font-bold text-primary">
-                              ${prize.amount.toLocaleString()}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
+                <Card className="border-charcoal-200 bg-ivory/90">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2 mb-2">
+                      <Target className="h-4 w-4 text-charcoal-600" />
+                      <span className="text-sm font-medium text-charcoal-700">
+                        Category
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      {getTypeIcon(hackathon.type!)}
+                      <span className="text-sm text-charcoal-900">
+                        {hackathon.type}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
 
-                <TabsContent value="submissions" className="space-y-6">
-                  <div className="grid md:grid-cols-2 gap-6">
-                    {submissions.map((submission) => (
-                      <Card
-                        key={submission.id}
-                        className="overflow-hidden hover:shadow-lg transition-shadow"
-                      >
-                        <div className="aspect-video bg-muted flex items-center justify-center">
-                          <div className="text-muted-foreground text-sm">
-                            {submission.title}
-                          </div>
-                        </div>
-                        <CardContent className="p-4">
-                          <div className="space-y-3">
-                            <div>
-                              <h3 className="font-semibold text-card-foreground">
-                                {submission.title}
-                              </h3>
-                              <p className="text-sm text-muted-foreground line-clamp-2">
-                                {submission.description}
-                              </p>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                              <Avatar className="w-6 h-6">
-                                <AvatarImage src={submission.avatar} />
-                                <AvatarFallback>
-                                  {submission.author[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                              <span className="text-sm text-muted-foreground">
-                                {submission.author}
-                              </span>
-                            </div>
-
-                            <div className="flex items-center justify-between text-sm text-muted-foreground">
-                              <div className="flex items-center gap-4">
-                                <div className="flex items-center gap-1">
-                                  <Heart className="w-4 h-4" />
-                                  {submission.likes}
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <Eye className="w-4 h-4" />
-                                  {submission.views}
-                                </div>
-                                <div className="flex items-center gap-1">
-                                  <MessageCircle className="w-4 h-4" />
-                                  {submission.comments}
-                                </div>
-                              </div>
-                              <span>
-                                {new Date(
-                                  submission.submittedAt
-                                ).toLocaleDateString()}
-                              </span>
-                            </div>
-                          </div>
-                        </CardContent>
-                      </Card>
-                    ))}
-                  </div>
-                </TabsContent>
-
-                <TabsContent value="leaderboard" className="space-y-6">
-                  <Card>
-                    <CardHeader>
-                      <CardTitle>Top Submissions</CardTitle>
-                      <CardDescription>
-                        Ranked by community votes and engagement
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <div className="space-y-4">
-                        {submissions
-                          .sort((a, b) => b.likes - a.likes)
-                          .map((submission, index) => (
-                            <div
-                              key={submission.id}
-                              className="flex items-center gap-4 p-3 rounded-lg bg-accent"
-                            >
-                              <div className="flex items-center justify-center w-8 h-8 rounded-full bg-primary text-primary-foreground font-bold">
-                                {index + 1}
-                              </div>
-                              <Avatar className="w-10 h-10">
-                                <AvatarImage src={submission.avatar} />
-                                <AvatarFallback>
-                                  {submission.author[0]}
-                                </AvatarFallback>
-                              </Avatar>
-                              <div className="flex-1">
-                                <div className="font-medium">
-                                  {submission.title}
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  by {submission.author}
-                                </div>
-                              </div>
-                              <div className="text-right">
-                                <div className="font-bold">
-                                  {submission.likes} likes
-                                </div>
-                                <div className="text-sm text-muted-foreground">
-                                  {submission.views} views
-                                </div>
-                              </div>
-                            </div>
-                          ))}
-                      </div>
-                    </CardContent>
-                  </Card>
-                </TabsContent>
-              </Tabs>
+              {/* Time Remaining */}
+              {hackathon.hackathonState ===
+                HackathonResponseHackathonState.Ongoing && (
+                <Card className="border-orange-200 bg-orange-50 mb-6">
+                  <CardContent className="p-4">
+                    <div className="flex items-center gap-2">
+                      <Clock className="h-5 w-5 text-orange-600" />
+                      <span className="font-medium text-orange-800">
+                        {getTimeRemaining(hackathon.endedAt)}
+                      </span>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
 
-            {/* Sidebar */}
-            <div className="space-y-6">
-              {/* Join Card */}
-              <Card>
+            {/* Action Panel */}
+            <div className="w-full lg:w-80">
+              <Card className="border-charcoal-200 bg-ivory/90 backdrop-blur-sm">
                 <CardHeader>
-                  <CardTitle className="text-center">
-                    Join the Challenge
+                  <CardTitle className="text-lg text-charcoal-900">
+                    Participation
                   </CardTitle>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="text-center">
-                    <div className="text-2xl font-bold text-primary">
-                      ${(hackathon.prize || 5000).toLocaleString()}
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      Total Prize Pool
-                    </div>
-                  </div>
-
-                  <Separator />
-
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Deadline</span>
-                      <span className="font-medium">{timeRemaining}</span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">
-                        Participants
-                      </span>
-                      <span className="font-medium">
-                        {hackathon.participants}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-muted-foreground">Submissions</span>
-                      <span className="font-medium">
-                        {hackathon.submissions}
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Action Buttons */}
-                  {hackathon.status === "pending" && (
-                    <>
-                      {!userTeam.isJoined ? (
-                        <Button className="w-full" size="lg" asChild>
-                          <Link
-                            href={`/create-team?hackathonId=${hackathon.id}`}
-                          >
-                            <Zap className="w-4 h-4 mr-2" />
-                            Create Team & Join
-                          </Link>
-                        </Button>
-                      ) : (
-                        <>
-                          <div className="p-4 bg-green-50 border border-green-200 rounded-lg">
-                            <div className="flex items-center gap-2 text-green-800">
-                              <CheckCircle className="w-5 h-5" />
-                              <span className="font-medium">
-                                Already Joined
-                              </span>
-                            </div>
-                            <p className="text-sm text-green-600 mt-1">
-                              Team: {userTeam.teamName}
-                            </p>
-                          </div>
-                          <Button
-                            variant="outline"
-                            className="w-full"
-                            size="lg"
-                            asChild
-                          >
-                            <Link
-                              href={`/manage-team?hackathonId=${hackathon.id}&teamId=${userTeam.teamId}`}
-                            >
-                              <Settings className="w-4 h-4 mr-2" />
-                              Manage Team
-                            </Link>
-                          </Button>
-                        </>
-                      )}
-
-                      {/* Voting Button - disabled during pending */}
-                      <Button variant="outline" className="w-full" disabled>
-                        <votingConfig.icon className="w-4 h-4 mr-2" />
-                        {votingConfig.label} (Available during voting phase)
-                      </Button>
-                    </>
-                  )}
-
-                  {hackathon.status === "active" && (
-                    <>
-                      {userTeam.isJoined ? (
-                        <>
-                          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
-                            <div className="flex items-center gap-2 text-blue-800">
-                              <Users className="w-5 h-5" />
-                              <span className="font-medium">Your Team</span>
-                            </div>
-                            <p className="text-sm text-blue-600 mt-1">
-                              {userTeam.teamName} ({userTeam.members.length}{" "}
-                              members)
-                            </p>
-                          </div>
-                          <Button className="w-full" size="lg" asChild>
-                            <Link
-                              href={`/submit/${hackathon.category.toLowerCase()}?hackathonId=${
-                                hackathon.id
-                              }&teamMode=true&teamName=${encodeURIComponent(
-                                userTeam.teamName
-                              )}`}
-                            >
-                              <Upload className="w-4 h-4 mr-2" />
-                              Submit Entry
-                            </Link>
-                          </Button>
-                          <Button
-                            variant="outline"
-                            className="w-full"
-                            size="lg"
-                            asChild
-                          >
-                            <Link
-                              href={`/manage-team?hackathonId=${hackathon.id}&teamId=${userTeam.teamId}&readonly=true`}
-                            >
-                              <Users className="w-4 h-4 mr-2" />
-                              View Team
-                            </Link>
-                          </Button>
-                        </>
-                      ) : (
-                        <div className="p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
-                          <div className="flex items-center gap-2 text-yellow-800">
-                            <AlertCircle className="w-5 h-5" />
-                            <span className="font-medium">
-                              Registration Closed
+                <CardContent>
+                  {canParticipate(hackathon.hackathonState!) ? (
+                    <div className="space-y-4">
+                      {myTeam.length > 0 ? (
+                        <div>
+                          <div className="flex items-center gap-2 mb-3">
+                            <Users className="h-4 w-4 text-green-600" />
+                            <span className="text-sm font-medium text-green-800">
+                              You&apos;re participating!
                             </span>
                           </div>
-                          <p className="text-sm text-yellow-600 mt-1">
-                            You can only join during the pending phase
+                          <div className="text-sm text-charcoal-600 mb-3">
+                            Team: {myTeam.length} member
+                            {myTeam.length !== 1 ? "s" : ""}
+                          </div>
+                          <Button
+                            onClick={() => setActiveTab("team")}
+                            className="w-full bg-charcoal-900 hover:bg-charcoal-800"
+                          >
+                            Manage Team
+                          </Button>
+                        </div>
+                      ) : (
+                        <div>
+                          <p className="text-sm text-charcoal-600 mb-4">
+                            Join this hackathon by creating or joining a team.
                           </p>
+                          <Button
+                            asChild
+                            className="w-full bg-charcoal-900 hover:bg-charcoal-800"
+                          >
+                            <Link
+                              href={`/hackathons/${hackathonId}/create-team`}
+                            >
+                              <Plus className="h-4 w-4 mr-2" />
+                              Create Team
+                            </Link>
+                          </Button>
                         </div>
                       )}
-
-                      {/* Voting Button - disabled during active */}
-                      <Button variant="outline" className="w-full" disabled>
-                        <votingConfig.icon className="w-4 h-4 mr-2" />
-                        {votingConfig.label} (Available during voting phase)
+                    </div>
+                  ) : hackathon.hackathonState ===
+                    HackathonResponseHackathonState.Ended ? (
+                    <div className="text-center">
+                      <Trophy className="h-8 w-8 mx-auto mb-2 text-charcoal-400" />
+                      <p className="text-sm text-charcoal-600">
+                        This hackathon has ended.
+                      </p>
+                      <Button
+                        onClick={() => setActiveTab("results")}
+                        variant="outline"
+                        className="w-full mt-3"
+                      >
+                        View Results
                       </Button>
-                    </>
+                    </div>
+                  ) : (
+                    <div className="text-center">
+                      <Clock className="h-8 w-8 mx-auto mb-2 text-charcoal-400" />
+                      <p className="text-sm text-charcoal-600">
+                        Registration will open when the hackathon starts.
+                      </p>
+                    </div>
                   )}
-
-                  {hackathon.status === "voting" && (
-                    <>
-                      {userTeam.isJoined && (
-                        <div className="p-4 bg-purple-50 border border-purple-200 rounded-lg">
-                          <div className="flex items-center gap-2 text-purple-800">
-                            <Users className="w-5 h-5" />
-                            <span className="font-medium">Your Team</span>
-                          </div>
-                          <p className="text-sm text-purple-600 mt-1">
-                            {userTeam.teamName} ({userTeam.members.length}{" "}
-                            members)
-                          </p>
-                        </div>
-                      )}
-
-                      {/* Voting Button - enabled during voting */}
-                      <Button asChild className="w-full" size="lg">
-                        <Link href={votingConfig.route}>
-                          <votingConfig.icon className="w-4 h-4 mr-2" />
-                          {votingConfig.label}
-                        </Link>
-                      </Button>
-
-                      <div className="p-4 bg-orange-50 border border-orange-200 rounded-lg">
-                        <div className="flex items-center gap-2 text-orange-800">
-                          <AlertCircle className="w-5 h-5" />
-                          <span className="font-medium">Voting Phase</span>
-                        </div>
-                        <p className="text-sm text-orange-600 mt-1">
-                          Submissions are closed. Vote for your favorite
-                          entries!
-                        </p>
-                      </div>
-                    </>
-                  )}
-
-                  {hackathon.status === "ended" && (
-                    <>
-                      {hackathon.winner && (
-                        <div className="p-4 bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg">
-                          <div className="flex items-center gap-2 text-yellow-800 mb-3">
-                            <Trophy className="w-5 h-5" />
-                            <span className="font-medium">
-                              Winner Announced!
-                            </span>
-                          </div>
-                          <div className="flex items-center gap-3">
-                            <Avatar className="h-10 w-10">
-                              <AvatarImage src={hackathon.winner.avatar} />
-                              <AvatarFallback>
-                                {hackathon.winner.author.charAt(0)}
-                              </AvatarFallback>
-                            </Avatar>
-                            <div>
-                              <p className="font-semibold text-foreground">
-                                {hackathon.winner.title}
-                              </p>
-                              <p className="text-sm text-muted-foreground">
-                                by {hackathon.winner.author}
-                              </p>
-                              <p className="text-sm font-medium text-yellow-700">
-                                Prize: $
-                                {hackathon.winner.prize.toLocaleString()}
-                              </p>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {userTeam.isJoined && (
-                        <div className="p-4 bg-gray-50 border border-gray-200 rounded-lg">
-                          <div className="flex items-center gap-2 text-gray-800">
-                            <Users className="w-5 h-5" />
-                            <span className="font-medium">Your Team</span>
-                          </div>
-                          <p className="text-sm text-gray-600 mt-1">
-                            {userTeam.teamName} ({userTeam.members.length}{" "}
-                            members)
-                          </p>
-                        </div>
-                      )}
-
-                      <Button asChild variant="outline" className="w-full">
-                        <Link href={votingConfig.route}>
-                          <Trophy className="w-4 h-4 mr-2" />
-                          View Final Results
-                        </Link>
-                      </Button>
-                    </>
-                  )}
-                </CardContent>
-              </Card>
-
-              {/* Timeline */}
-              <Card>
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2">
-                    <Calendar className="w-5 h-5" />
-                    Timeline
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                      <div>
-                        <div className="text-sm font-medium">
-                          Registration Open
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {new Date(hackathon.startDate).toLocaleDateString()}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
-                      <div>
-                        <div className="text-sm font-medium">
-                          Submission Deadline
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          {new Date(
-                            hackathon.deadline || hackathon.endDate
-                          ).toLocaleDateString()}
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-                      <div>
-                        <div className="text-sm font-medium">
-                          Judging Period
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          Feb 16 - Feb 20, 2024
-                        </div>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
-                      <div>
-                        <div className="text-sm font-medium">
-                          Winners Announced
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          Feb 21, 2024
-                        </div>
-                      </div>
-                    </div>
-                  </div>
                 </CardContent>
               </Card>
             </div>
           </div>
         </div>
       </GridBackground>
+
+      {/* Main Content */}
+      <div className="container mx-auto px-4 py-8">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+          <TabsList className="grid w-full grid-cols-4 bg-charcoal-100">
+            <TabsTrigger
+              value="overview"
+              className="data-[state=active]:bg-ivory"
+            >
+              Overview
+            </TabsTrigger>
+            <TabsTrigger value="team" className="data-[state=active]:bg-ivory">
+              Team
+            </TabsTrigger>
+            <TabsTrigger
+              value="submissions"
+              className="data-[state=active]:bg-ivory"
+            >
+              Submissions
+            </TabsTrigger>
+            <TabsTrigger
+              value="results"
+              className="data-[state=active]:bg-ivory"
+            >
+              Results
+            </TabsTrigger>
+          </TabsList>
+
+          {/* Overview Tab */}
+          <TabsContent value="overview" className="mt-6">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+              <div className="lg:col-span-2">
+                <Card className="border-charcoal-200 bg-ivory/90">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-charcoal-900">
+                      About This Hackathon
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="prose prose-charcoal max-w-none">
+                      <p className="text-charcoal-700 leading-relaxed">
+                        {hackathon.description}
+                      </p>
+
+                      <Separator className="my-6 bg-charcoal-100" />
+
+                      <h3 className="text-lg font-semibold text-charcoal-900 mb-3">
+                        Guidelines & Rules
+                      </h3>
+                      <ul className="space-y-2 text-charcoal-700">
+                        <li>• Teams can have 1-4 members</li>
+                        <li>• All submissions must be original work</li>
+                        <li>• Follow the theme and category requirements</li>
+                        <li>• Submit before the deadline</li>
+                        <li>• Be respectful and collaborative</li>
+                      </ul>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <div className="space-y-6">
+                <Card className="border-charcoal-200 bg-ivory/90">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-charcoal-900">
+                      Quick Stats
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex justify-between items-center">
+                        <span className="text-charcoal-600">Status</span>
+                        <Badge
+                          className={getStatusColor(hackathon.hackathonState!)}
+                        >
+                          {hackathon.hackathonState}
+                        </Badge>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-charcoal-600">Category</span>
+                        <span className="text-charcoal-900">
+                          {hackathon.type}
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-charcoal-600">Duration</span>
+                        <span className="text-charcoal-900">
+                          {hackathon.startedAt && hackathon.endedAt
+                            ? Math.ceil(
+                                (new Date(hackathon.endedAt).getTime() -
+                                  new Date(hackathon.startedAt).getTime()) /
+                                  (1000 * 60 * 60 * 24)
+                              ) + " days"
+                            : "TBD"}
+                        </span>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-charcoal-200 bg-ivory/90">
+                  <CardHeader>
+                    <CardTitle className="text-lg text-charcoal-900">
+                      Timeline
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="space-y-4">
+                      <div className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-blue-500 rounded-full mt-2"></div>
+                        <div>
+                          <p className="text-sm font-medium text-charcoal-900">
+                            Registration Opens
+                          </p>
+                          <p className="text-xs text-charcoal-600">
+                            {formatDate(hackathon.startedAt)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-green-500 rounded-full mt-2"></div>
+                        <div>
+                          <p className="text-sm font-medium text-charcoal-900">
+                            Hackathon Begins
+                          </p>
+                          <p className="text-xs text-charcoal-600">
+                            {formatDate(hackathon.startedAt)}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-start gap-3">
+                        <div className="w-2 h-2 bg-red-500 rounded-full mt-2"></div>
+                        <div>
+                          <p className="text-sm font-medium text-charcoal-900">
+                            Submission Deadline
+                          </p>
+                          <p className="text-xs text-charcoal-600">
+                            {formatDate(hackathon.endedAt)}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+            </div>
+          </TabsContent>
+
+          {/* Team Tab */}
+          <TabsContent value="team" className="mt-6">
+            <Card className="border-charcoal-200 bg-ivory/90">
+              <CardHeader>
+                <CardTitle className="text-xl text-charcoal-900">
+                  Team Management
+                </CardTitle>
+                <CardDescription>
+                  {myTeam.length > 0
+                    ? `You are part of a team with ${myTeam.length} member${
+                        myTeam.length !== 1 ? "s" : ""
+                      }`
+                    : "You haven't joined a team yet"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                {myTeam.length > 0 ? (
+                  <div className="space-y-4">
+                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                      <div className="flex items-center gap-2 mb-2">
+                        <Users className="h-4 w-4 text-green-600" />
+                        <span className="text-sm font-medium text-green-800">
+                          Team Members ({myTeam.length})
+                        </span>
+                      </div>
+                      <p className="text-sm text-green-700">
+                        Team management features will be available soon.
+                      </p>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="text-center py-12">
+                    <Users className="h-12 w-12 mx-auto mb-4 text-charcoal-400" />
+                    <h3 className="text-lg font-medium text-charcoal-900 mb-2">
+                      No Team Yet
+                    </h3>
+                    <p className="text-charcoal-600 mb-4">
+                      Create a team to participate in this hackathon.
+                    </p>
+                    <Button
+                      asChild
+                      className="bg-charcoal-900 hover:bg-charcoal-800"
+                    >
+                      <Link href={`/hackathons/${hackathonId}/create-team`}>
+                        <Plus className="h-4 w-4 mr-2" />
+                        Create Team
+                      </Link>
+                    </Button>
+                  </div>
+                )}
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Submissions Tab */}
+          <TabsContent value="submissions" className="mt-6">
+            <Card className="border-charcoal-200 bg-ivory/90">
+              <CardHeader>
+                <CardTitle className="text-xl text-charcoal-900">
+                  Submissions
+                </CardTitle>
+                <CardDescription>
+                  View and manage your hackathon submissions
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Target className="h-12 w-12 mx-auto mb-4 text-charcoal-400" />
+                  <h3 className="text-lg font-medium text-charcoal-900 mb-2">
+                    No submissions yet
+                  </h3>
+                  <p className="text-charcoal-600 mb-4">
+                    Upload your project files and submit your work here.
+                  </p>
+                  <Button className="bg-charcoal-900 hover:bg-charcoal-800">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Submission
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+
+          {/* Results Tab */}
+          <TabsContent value="results" className="mt-6">
+            <Card className="border-charcoal-200 bg-ivory/90">
+              <CardHeader>
+                <CardTitle className="text-xl text-charcoal-900">
+                  Results & Voting
+                </CardTitle>
+                <CardDescription>
+                  {canVote(hackathon.hackathonState!)
+                    ? "Vote for your favorite submissions"
+                    : "Results will be available after the hackathon ends"}
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <div className="text-center py-12">
+                  <Vote className="h-12 w-12 mx-auto mb-4 text-charcoal-400" />
+                  <h3 className="text-lg font-medium text-charcoal-900 mb-2">
+                    {canVote(hackathon.hackathonState!)
+                      ? "Voting Available"
+                      : "Results Coming Soon"}
+                  </h3>
+                  <p className="text-charcoal-600">
+                    {canVote(hackathon.hackathonState!)
+                      ? "Browse submissions and cast your votes."
+                      : "Check back after the hackathon ends to see the results."}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          </TabsContent>
+        </Tabs>
+      </div>
     </div>
   );
 }
