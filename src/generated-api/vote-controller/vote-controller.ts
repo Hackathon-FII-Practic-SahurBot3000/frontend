@@ -45,7 +45,7 @@ export const createVote = (
     
     
     return axios.post(
-      `http://localhost:8080/votes`,
+      `https://api.hackathon-fiipractic.octavianregatun.com/votes`,
       voteRequest,options
     );
   }
@@ -100,13 +100,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
     
     
     return axios.get(
-      `http://localhost:8080/votes/count/${teamId}`,options
+      `https://api.hackathon-fiipractic.octavianregatun.com/votes/count/${teamId}`,options
     );
   }
 
 
 export const getGetVoteCountQueryKey = (teamId: number,) => {
-    return [`http://localhost:8080/votes/count/${teamId}`] as const;
+    return [`https://api.hackathon-fiipractic.octavianregatun.com/votes/count/${teamId}`] as const;
     }
 
     

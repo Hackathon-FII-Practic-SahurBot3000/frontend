@@ -47,7 +47,7 @@ export const updateLink = (
     
     
     return axios.put(
-      `http://localhost:8080/links/${id}`,
+      `https://api.hackathon-fiipractic.octavianregatun.com/links/${id}`,
       linkUpdateRequest,options
     );
   }
@@ -102,7 +102,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
     
     
     return axios.delete(
-      `http://localhost:8080/links/${id}`,options
+      `https://api.hackathon-fiipractic.octavianregatun.com/links/${id}`,options
     );
   }
 
@@ -156,7 +156,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
     
     
     return axios.post(
-      `http://localhost:8080/links`,
+      `https://api.hackathon-fiipractic.octavianregatun.com/links`,
       linkRequest,options
     );
   }
@@ -211,13 +211,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
     
     
     return axios.get(
-      `http://localhost:8080/links/user/${userId}`,options
+      `https://api.hackathon-fiipractic.octavianregatun.com/links/user/${userId}`,options
     );
   }
 
 
 export const getGetLinksByUserIdQueryKey = (userId: number,) => {
-    return [`http://localhost:8080/links/user/${userId}`] as const;
+    return [`https://api.hackathon-fiipractic.octavianregatun.com/links/user/${userId}`] as const;
     }
 
     

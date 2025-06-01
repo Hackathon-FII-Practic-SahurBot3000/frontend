@@ -6,9 +6,9 @@ import { ThemeProvider } from "@/components/theme-provider";
 import Navigation from "@/components/navigation";
 import { Footer } from "@/components/footer";
 import { AuthProvider } from "@/contexts/auth-context";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProviders } from "@/providers/AppProviders";
 import axios from "axios";
+import "@/lib/axios-config";
 
 const inter = Inter({ subsets: ["latin"] });
 

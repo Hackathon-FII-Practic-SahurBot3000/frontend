@@ -7,6 +7,14 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -16,7 +24,6 @@ import {
 } from "@/components/ui/dropdown-menu";
 import {
   Menu,
-  X,
   Settings,
   LogOut,
   UserCircle,
@@ -310,45 +317,27 @@ export default function Navigation() {
             )}
 
             {/* Mobile Menu Button */}
-            <Button
-              variant="ghost"
-              size="icon"
-              className="lg:hidden"
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            >
-              {mobileMenuOpen ? <X size={20} /> : <Menu size={20} />}
-            </Button>
-          </div>
-        </div>
+            <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="lg:hidden">
+                  <Menu size={20} />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="right" className="w-[300px] sm:w-[400px]">
+                <SheetHeader>
+                  <SheetTitle>Navigation</SheetTitle>
+                  <SheetDescription>
+                    Access all IdeaSweep features and your account
+                  </SheetDescription>
+                </SheetHeader>
 
-        {/* Mobile Menu */}
-        {mobileMenuOpen && (
-          <div className="container lg:hidden py-4 bg-background border-t">
-            <nav className="flex flex-col gap-4">
-              {routes.map((route) => (
-                <Link
-                  key={route.path}
-                  href={route.path}
-                  className={cn(
-                    "text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md",
-                    pathname === route.path
-                      ? "bg-accent text-accent-foreground"
-                      : "text-muted-foreground"
-                  )}
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  {route.name}
-                </Link>
-              ))}
-
-              {/* Mobile Auth Section */}
-              {mounted && (
-                <div className="border-t pt-4 mt-4">
-                  {isAuthenticated && user ? (
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-3 p-2">
+                <div className="mt-6">
+                  {/* User Section */}
+                  {mounted && isAuthenticated && user && (
+                    <div className="mb-6 p-4 bg-accent/50 rounded-lg">
+                      <div className="flex items-center gap-3">
                         <div className="relative">
-                          <Avatar className="h-8 w-8">
+                          <Avatar className="h-10 w-10">
                             <AvatarImage
                               src={user.avatar}
                               alt={`${user.firstName} ${user.lastName}`}
@@ -360,30 +349,62 @@ export default function Navigation() {
                           </Avatar>
                           <div
                             className={cn(
-                              "absolute bottom-0 right-0 h-2 w-2 rounded-full border border-background",
+                              "absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-background",
                               getStatusColor(user.status)
                             )}
                           />
                         </div>
-                        <div>
+                        <div className="flex-1">
                           <p className="text-sm font-medium">
                             {user.firstName} {user.lastName}
                           </p>
                           <p className="text-xs text-muted-foreground">
                             {user.email}
                           </p>
+                          <p className="text-xs text-muted-foreground capitalize">
+                            Status: {user.status}
+                          </p>
                         </div>
                         {user.notifications > 0 && (
-                          <div className="ml-auto">
-                            <span className="h-5 w-5 rounded-full bg-red-500 text-xs text-white flex items-center justify-center">
-                              {user.notifications}
-                            </span>
+                          <div className="h-6 w-6 rounded-full bg-red-500 text-xs text-white flex items-center justify-center">
+                            {user.notifications}
                           </div>
                         )}
                       </div>
+                    </div>
+                  )}
+
+                  {/* Navigation Links */}
+                  <nav className="space-y-2">
+                    {routes.map((route) => (
+                      <Link
+                        key={route.path}
+                        href={route.path}
+                        className={cn(
+                          "flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md",
+                          pathname === route.path
+                            ? "bg-accent text-accent-foreground"
+                            : "text-muted-foreground",
+                          route.name === "Create Hackathon"
+                            ? "bg-primary text-primary-foreground hover:bg-primary/90"
+                            : ""
+                        )}
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        {route.name === "Create Hackathon" && (
+                          <Plus className="h-4 w-4" />
+                        )}
+                        {route.name}
+                      </Link>
+                    ))}
+                  </nav>
+
+                  {/* User Actions */}
+                  {mounted && isAuthenticated && user && (
+                    <div className="mt-6 pt-6 border-t space-y-2">
                       <Link
                         href="/profile"
-                        className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground"
+                        className="flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md text-muted-foreground"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <UserCircle className="h-4 w-4" />
@@ -391,7 +412,7 @@ export default function Navigation() {
                       </Link>
                       <Link
                         href="/settings"
-                        className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground"
+                        className="flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md text-muted-foreground"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <Settings className="h-4 w-4" />
@@ -402,24 +423,27 @@ export default function Navigation() {
                           handleLogout();
                           setMobileMenuOpen(false);
                         }}
-                        className="flex items-center gap-2 text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground w-full text-left"
+                        className="flex items-center gap-3 px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md text-muted-foreground w-full text-left"
                       >
                         <LogOut className="h-4 w-4" />
                         Log out
                       </button>
                     </div>
-                  ) : (
-                    <div className="space-y-2">
+                  )}
+
+                  {/* Auth Section for Non-authenticated Users */}
+                  {mounted && !isAuthenticated && (
+                    <div className="mt-6 pt-6 border-t space-y-2">
                       <Link
                         href="/login"
-                        className="text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground block"
+                        className="flex items-center justify-center px-3 py-2 text-sm font-medium transition-colors hover:bg-accent hover:text-accent-foreground rounded-md text-muted-foreground border"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Sign in
                       </Link>
                       <Link
                         href="/register"
-                        className="text-sm font-medium transition-colors hover:text-foreground p-2 rounded-md text-muted-foreground block"
+                        className="flex items-center justify-center px-3 py-2 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 rounded-md"
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         Sign up
@@ -427,145 +451,145 @@ export default function Navigation() {
                     </div>
                   )}
                 </div>
-              )}
-            </nav>
+              </SheetContent>
+            </Sheet>
+          </div>
+        </div>
+
+        {/* Right-Click Context Menu */}
+        {contextMenu.show && (
+          <div
+            ref={contextMenuRef}
+            className="fixed z-[100] min-w-[200px] bg-popover border border-border rounded-md shadow-lg py-1"
+            style={{
+              left: `${Math.min(contextMenu.x, window.innerWidth - 220)}px`,
+              top: `${Math.min(contextMenu.y, window.innerHeight - 400)}px`,
+            }}
+          >
+            {/* User Info Header */}
+            <div className="px-3 py-2 border-b border-border">
+              <div className="flex items-center gap-2">
+                <Avatar className="h-8 w-8">
+                  <AvatarImage
+                    src={user?.avatar}
+                    alt={`${user?.firstName} ${user?.lastName}`}
+                  />
+                  <AvatarFallback>
+                    {user?.firstName[0]}
+                    {user?.lastName[0]}
+                  </AvatarFallback>
+                </Avatar>
+                <div>
+                  <p className="text-sm font-medium">
+                    {user?.firstName} {user?.lastName}
+                  </p>
+                  <p className="text-xs text-muted-foreground capitalize">
+                    {user?.status}
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Actions */}
+            <div className="py-1">
+              <button
+                onClick={handleNotifications}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <Bell className="h-4 w-4" />
+                <span>Notifications</span>
+                {user?.notifications && user.notifications > 0 && (
+                  <span className="ml-auto text-xs bg-red-500 text-white rounded-full px-1.5 py-0.5">
+                    {user.notifications}
+                  </span>
+                )}
+              </button>
+
+              <button
+                onClick={handleMessages}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <MessageSquare className="h-4 w-4" />
+                <span>Messages</span>
+              </button>
+
+              <button
+                onClick={handleBookmarks}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <Bookmark className="h-4 w-4" />
+                <span>Saved Items</span>
+              </button>
+
+              <button
+                onClick={handleMySubmissions}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <Palette className="h-4 w-4" />
+                <span>My Submissions</span>
+              </button>
+            </div>
+
+            <div className="border-t border-border py-1">
+              <button
+                onClick={handleProfile}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <UserCircle className="h-4 w-4" />
+                <span>View Profile</span>
+              </button>
+
+              <button
+                onClick={handleSettings}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <Settings className="h-4 w-4" />
+                <span>Settings</span>
+              </button>
+
+              <button
+                onClick={handleToggleTheme}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                {isDarkMode ? (
+                  <Sun className="h-4 w-4" />
+                ) : (
+                  <Moon className="h-4 w-4" />
+                )}
+                <span>{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
+              </button>
+            </div>
+
+            <div className="border-t border-border py-1">
+              <button
+                onClick={handleHelp}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <HelpCircle className="h-4 w-4" />
+                <span>Help & Support</span>
+              </button>
+
+              <button
+                onClick={handlePrivacy}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
+              >
+                <Shield className="h-4 w-4" />
+                <span>Privacy</span>
+              </button>
+            </div>
+
+            <div className="border-t border-border py-1">
+              <button
+                onClick={handleLogout}
+                className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-destructive hover:text-destructive-foreground text-destructive"
+              >
+                <LogOut className="h-4 w-4" />
+                <span>Sign Out</span>
+              </button>
+            </div>
           </div>
         )}
       </header>
-
-      {/* Right-Click Context Menu */}
-      {contextMenu.show && (
-        <div
-          ref={contextMenuRef}
-          className="fixed z-[100] min-w-[200px] bg-popover border border-border rounded-md shadow-lg py-1"
-          style={{
-            left: `${Math.min(contextMenu.x, window.innerWidth - 220)}px`,
-            top: `${Math.min(contextMenu.y, window.innerHeight - 400)}px`,
-          }}
-        >
-          {/* User Info Header */}
-          <div className="px-3 py-2 border-b border-border">
-            <div className="flex items-center gap-2">
-              <Avatar className="h-8 w-8">
-                <AvatarImage
-                  src={user?.avatar}
-                  alt={`${user?.firstName} ${user?.lastName}`}
-                />
-                <AvatarFallback>
-                  {user?.firstName[0]}
-                  {user?.lastName[0]}
-                </AvatarFallback>
-              </Avatar>
-              <div>
-                <p className="text-sm font-medium">
-                  {user?.firstName} {user?.lastName}
-                </p>
-                <p className="text-xs text-muted-foreground capitalize">
-                  {user?.status}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Quick Actions */}
-          <div className="py-1">
-            <button
-              onClick={handleNotifications}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              <Bell className="h-4 w-4" />
-              <span>Notifications</span>
-              {user?.notifications && user.notifications > 0 && (
-                <span className="ml-auto text-xs bg-red-500 text-white rounded-full px-1.5 py-0.5">
-                  {user.notifications}
-                </span>
-              )}
-            </button>
-
-            <button
-              onClick={handleMessages}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              <MessageSquare className="h-4 w-4" />
-              <span>Messages</span>
-            </button>
-
-            <button
-              onClick={handleBookmarks}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              <Bookmark className="h-4 w-4" />
-              <span>Saved Items</span>
-            </button>
-
-            <button
-              onClick={handleMySubmissions}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              <Palette className="h-4 w-4" />
-              <span>My Submissions</span>
-            </button>
-          </div>
-
-          <div className="border-t border-border py-1">
-            <button
-              onClick={handleProfile}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              <UserCircle className="h-4 w-4" />
-              <span>View Profile</span>
-            </button>
-
-            <button
-              onClick={handleSettings}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              <Settings className="h-4 w-4" />
-              <span>Settings</span>
-            </button>
-
-            <button
-              onClick={handleToggleTheme}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              {isDarkMode ? (
-                <Sun className="h-4 w-4" />
-              ) : (
-                <Moon className="h-4 w-4" />
-              )}
-              <span>{isDarkMode ? "Light Mode" : "Dark Mode"}</span>
-            </button>
-          </div>
-
-          <div className="border-t border-border py-1">
-            <button
-              onClick={handleHelp}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              <HelpCircle className="h-4 w-4" />
-              <span>Help & Support</span>
-            </button>
-
-            <button
-              onClick={handlePrivacy}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-accent hover:text-accent-foreground"
-            >
-              <Shield className="h-4 w-4" />
-              <span>Privacy</span>
-            </button>
-          </div>
-
-          <div className="border-t border-border py-1">
-            <button
-              onClick={handleLogout}
-              className="flex items-center gap-2 w-full px-3 py-2 text-sm hover:bg-destructive hover:text-destructive-foreground text-destructive"
-            >
-              <LogOut className="h-4 w-4" />
-              <span>Sign Out</span>
-            </button>
-          </div>
-        </div>
-      )}
     </>
   );
 }

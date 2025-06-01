@@ -47,7 +47,7 @@ export const register = (
     
     
     return axios.post(
-      `http://localhost:8080/auth/register`,
+      `https://api.hackathon-fiipractic.octavianregatun.com/auth/register`,
       authRequest,options
     );
   }
@@ -102,7 +102,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
     
     
     return axios.post(
-      `http://localhost:8080/auth/login`,
+      `https://api.hackathon-fiipractic.octavianregatun.com/auth/login`,
       authRequest,options
     );
   }
@@ -157,13 +157,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
     
     
     return axios.get(
-      `http://localhost:8080/auth/me`,options
+      `https://api.hackathon-fiipractic.octavianregatun.com/auth/me`,options
     );
   }
 
 
 export const getGetCurrentUserQueryKey = () => {
-    return [`http://localhost:8080/auth/me`] as const;
+    return [`https://api.hackathon-fiipractic.octavianregatun.com/auth/me`] as const;
     }
 
     
@@ -236,13 +236,13 @@ export const googleLogin = (
     
     
     return axios.get(
-      `http://localhost:8080/auth/google`,options
+      `https://api.hackathon-fiipractic.octavianregatun.com/auth/google`,options
     );
   }
 
 
 export const getGoogleLoginQueryKey = () => {
-    return [`http://localhost:8080/auth/google`] as const;
+    return [`https://api.hackathon-fiipractic.octavianregatun.com/auth/google`] as const;
     }
 
     

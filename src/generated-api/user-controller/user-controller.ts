@@ -40,13 +40,13 @@ export const getUserMe = (
     
     
     return axios.get(
-      `http://localhost:8080/users/me`,options
+      `https://api.hackathon-fiipractic.octavianregatun.com/users/me`,options
     );
   }
 
 
 export const getGetUserMeQueryKey = () => {
-    return [`http://localhost:8080/users/me`] as const;
+    return [`https://api.hackathon-fiipractic.octavianregatun.com/users/me`] as const;
     }
 
     

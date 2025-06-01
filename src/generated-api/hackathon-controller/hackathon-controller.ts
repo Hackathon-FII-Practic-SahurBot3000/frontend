@@ -45,7 +45,7 @@ export const createHackathon = (
     
     
     return axios.post(
-      `http://localhost:8080/hackathons/create`,
+      `https://api.hackathon-fiipractic.octavianregatun.com/hackathons/create`,
       hackathonRequest,options
     );
   }
@@ -100,13 +100,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
     
     
     return axios.get(
-      `http://localhost:8080/hackathons`,options
+      `https://api.hackathon-fiipractic.octavianregatun.com/hackathons`,options
     );
   }
 
 
 export const getGetAllQueryKey = () => {
-    return [`http://localhost:8080/hackathons`] as const;
+    return [`https://api.hackathon-fiipractic.octavianregatun.com/hackathons`] as const;
     }
 
     
@@ -179,13 +179,13 @@ export const getById = (
     
     
     return axios.get(
-      `http://localhost:8080/hackathons/${id}`,options
+      `https://api.hackathon-fiipractic.octavianregatun.com/hackathons/${id}`,options
     );
   }
 
 
 export const getGetByIdQueryKey = (id: number,) => {
-    return [`http://localhost:8080/hackathons/${id}`] as const;
+    return [`https://api.hackathon-fiipractic.octavianregatun.com/hackathons/${id}`] as const;
     }
 
     
@@ -258,13 +258,13 @@ export const getMyHackathons = (
     
     
     return axios.get(
-      `http://localhost:8080/hackathons/my`,options
+      `https://api.hackathon-fiipractic.octavianregatun.com/hackathons/my`,options
     );
   }
 
 
 export const getGetMyHackathonsQueryKey = () => {
-    return [`http://localhost:8080/hackathons/my`] as const;
+    return [`https://api.hackathon-fiipractic.octavianregatun.com/hackathons/my`] as const;
     }
 
     

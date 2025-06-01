@@ -48,7 +48,7 @@ export const createTeam = (
     
     
     return axios.post(
-      `http://localhost:8080/teams`,
+      `https://api.hackathon-fiipractic.octavianregatun.com/teams`,
       teamCreateRequest,options
     );
   }
@@ -103,7 +103,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
     
     
     return axios.post(
-      `http://localhost:8080/teams/members`,
+      `https://api.hackathon-fiipractic.octavianregatun.com/teams/members`,
       teamMemberInviteRequest,options
     );
   }
@@ -158,7 +158,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
     
     
     return axios.delete(
-      `http://localhost:8080/teams/members`,{data:
+      `https://api.hackathon-fiipractic.octavianregatun.com/teams/members`,{data:
       teamMemberRemoveRequest, ...options}
     );
   }
@@ -213,13 +213,13 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
     
     
     return axios.get(
-      `http://localhost:8080/teams/my-team`,options
+      `https://api.hackathon-fiipractic.octavianregatun.com/teams/my-team`,options
     );
   }
 
 
 export const getGetMyTeamQueryKey = (getMyTeamRequest: GetMyTeamRequest,) => {
-    return [`http://localhost:8080/teams/my-team`, getMyTeamRequest] as const;
+    return [`https://api.hackathon-fiipractic.octavianregatun.com/teams/my-team`, getMyTeamRequest] as const;
     }
 
     
